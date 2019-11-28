@@ -53,13 +53,15 @@ void graph_addEdge(Graph g, Type u, Type v, double weight) {
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
-        f_u = g->cF(list_data(it),u);
-        f_v = g->cF(list_data(it),v);
-        if(!f_u)n_u++;
+        if(!f_v) f_v = g->cF(list_data(it),v);
+        if(!f_u) {
+            f_u = g->cF(list_data(it),u);
+            n_u++;
+        }
     }
     list_end(it);
     if(!f_u || !f_v) return;
-    List tL = list_get(tL,n_u);
+    List tL = list_get(g->adjacencyList,n_u);
     list_add(tL,v);
 }
 
