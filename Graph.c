@@ -3,7 +3,7 @@
 //
 
 #include <stdlib.h>
-#include "../../../../../../Desktop/Proyecto/Graph.h"
+#include "Graph.h"
 
 struct strGraph {
     Type **adjacencyList;

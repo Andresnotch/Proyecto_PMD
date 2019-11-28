@@ -3,4 +3,4 @@ project(Proyecto C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Proyecto main.c)
+add_executable(Proyecto main.c Graph.c Graph.h)
