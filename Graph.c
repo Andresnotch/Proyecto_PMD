@@ -44,29 +44,73 @@ void graph_addVertex(Graph g, Type u) {
 }
 
 void graph_deleteVertex(Graph g, Type v) {
-
+    if(!g) return NULL;
+    // Bandera found para v
+    int f_v = 1;
+    Iterator it = list_begin(g->adjacencyList);
+    while (list_hasNext(it)) {
+        it = (Iterator) list_next(it);
+        // Compara el elemento 0 de la lista en el iterador con v
+        f_v = g->cF(list_get(list_data(it),0),v);
+        if (f_v) {
+            list_destroy(list_data(it));
+            break;
+        }
+    }
 }
 
 void graph_addEdge(Graph g, Type u, Type v, double weight) {
     if(!g) return NULL;
-    int f_u = 1, f_v = 1, n_u=-1,n_v=-1;
+    // f_x son banderas found para los nodos u y v
+    int f_u = 1, f_v = 1;
+    List tL = NULL;
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
-        if(!f_v) f_v = g->cF(list_data(it),v);
-        if(!f_u) {
-            f_u = g->cF(list_data(it),u);
-            n_u++;
+        // Si no ha encontrado a v, compara el elemento 0
+        // de la lista en el iterador con v
+        if(!f_v) f_v = g->cF(list_get(list_data(it),0),v);
+        // Compara el elemento 0 de la lista en el iterador con u
+        f_u = g->cF(list_get(list_data(it),0),u);
+        if (f_u) {
+            tL = list_data(it);
+            if(f_v) break;
         }
     }
     list_end(it);
     if(!f_u || !f_v) return;
-    List tL = list_get(g->adjacencyList,n_u);
     list_add(tL,v);
 }
 
 void graph_deleteEdge(Graph g, Type u, Type v) {
-
+    if(!g) return NULL;
+    // f_u es badera para found el nodo u
+    int f_u = 1;
+    List tL = NULL;
+    Iterator it = list_begin(g->adjacencyList);
+    while (list_hasNext(it)) {
+        it = (Iterator) list_next(it);
+        // Compara el elemento 0 de la lista en el iterador con u
+        f_u = g->cF(list_get(list_data(it),0),u);
+        if (f_u) {
+            tL = list_data(it);
+            break;
+        }
+    }
+    list_end(it);
+    if(!f_u) return;
+    it = list_begin(tL);
+    // f_u es badera para found el nodo v
+    int f_v = 1;
+    while (list_hasNext(it)) {
+        it = (Iterator) list_next(it);
+        // Compara el elemento en el iterador con v
+        f_v = g->cF(list_data(it),v);
+        if (f_v) {
+            list_destroy(list_data(it));
+            break;
+        }
+    }
 }
 
 
