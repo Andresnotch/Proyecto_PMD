@@ -22,7 +22,7 @@ Graph graph_create(PrintFunc printer, DestroyFunc destructor, CompareFunc comp) 
 }
 
 void graph_destroy(Graph g) {
-    if(!g) return NULL;
+    if(!g) return;
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
@@ -34,7 +34,7 @@ void graph_destroy(Graph g) {
 }
 
 void graph_addVertex(Graph g, Type u) {
-    if(!g) return NULL;
+    if(!g) return;
     if (!g->adjacencyList) {
         g->adjacencyList = list_create(g->dF);
     }
@@ -44,7 +44,7 @@ void graph_addVertex(Graph g, Type u) {
 }
 
 void graph_deleteVertex(Graph g, Type v) {
-    if(!g) return NULL;
+    if(!g) return;
     // Bandera found para v
     int f_v = 1;
     Iterator it = list_begin(g->adjacencyList);
@@ -60,7 +60,7 @@ void graph_deleteVertex(Graph g, Type v) {
 }
 
 void graph_addEdge(Graph g, Type u, Type v, double weight) {
-    if(!g) return NULL;
+    if(!g) return;
     // f_x son banderas found para los nodos u y v
     int f_u = 1, f_v = 1;
     List tL = NULL;
@@ -83,7 +83,7 @@ void graph_addEdge(Graph g, Type u, Type v, double weight) {
 }
 
 void graph_deleteEdge(Graph g, Type u, Type v) {
-    if(!g) return NULL;
+    if(!g) return;
     // f_u es badera para found el nodo u
     int f_u = 1;
     List tL = NULL;
