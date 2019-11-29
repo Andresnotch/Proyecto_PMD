@@ -11,7 +11,7 @@ typedef void (*PrintFunc) (Type);
 typedef void (*DestroyFunc) (Type);
 typedef struct strGraph * Graph;
 
-Graph graph_creategraph_create(PrintFunc printer, DestroyFunc destructor, CompareFunc comp);
+Graph graph_create(PrintFunc printer, DestroyFunc destructor, CompareFunc comp);
 void graph_destroy(Graph g);
 void graph_addVertex(Graph g, Type u);
 void graph_deleteVertex(Graph g, Type v);
