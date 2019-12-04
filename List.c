@@ -1,5 +1,5 @@
 //
-// Created by rln on 2019-11-28.
+// Created by rln on 2019-11-25.
 //
 
 #include "List.h"
@@ -109,6 +109,16 @@ void list_set(List l, Type t, int p){
 
 Type list_remove(List l, int p){
     Node current = NULL;
+    Type * toReturn;
+    if (p == 0 && l->size == 1){
+        toReturn = l->first->data;
+        free(l->first);
+        free(l->preFirst);
+        free(l->postLast);
+        l->first = l->last = l->postLast = l->preFirst = NULL;
+        l->size--;
+        return toReturn;
+    }
     if (p < 0 || p >= l->size) return current;
     else if (p < l->size/2){
         current = l->first;
@@ -121,7 +131,7 @@ Type list_remove(List l, int p){
 
     if (current->next) current->next->prior = current->prior;
     if (current->prior) current->prior->next = current->next;
-    Type * toReturn = current->data;
+    toReturn = current->data;
     free(current);
     l->size--;
 
@@ -140,12 +150,12 @@ Iterator list_end(List l){
 }
 
 bool list_hasNext(Iterator i){
-    if (i->next) return TRUE;
+    if (i && i->next) return TRUE;
     return FALSE;
 }
 
 bool list_hasPrior(Iterator i){
-    if (i->prior) return TRUE;
+    if (i && i->prior) return TRUE;
     return FALSE;
 }
 
