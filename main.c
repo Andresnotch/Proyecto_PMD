@@ -6,10 +6,13 @@ int AlphOrder(Type s1, Type s2);
 
 int main() {
     Graph g = graph_create(printStr,NULL,AlphOrder);
+    graph_mode(g,0);
     char* s1 = "Ganso";
     char* s2 = "Pato";
     graph_addVertex(g,s1);
     graph_addVertex(g,s2);
+
+
     return 0;
 }
 
