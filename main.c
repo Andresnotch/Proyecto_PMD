@@ -12,6 +12,8 @@ int main() {
     graph_addVertex(g,s1);
     graph_addVertex(g,s2);
 
+    graph_addEdge(g,s1,s2,2.9);
+
 
     return 0;
 }
