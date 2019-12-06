@@ -51,7 +51,7 @@ void graph_addVertex(Graph g, Type u) {
     List tL = list_create(g->dF);
     list_add(tL,u);
     list_add(g->adjacencyList, tL);
-    if(g->debug == 0) graph_print(g);
+    if (g->debug == 0) graph_print(g);
 }
 
 void graph_deleteVertex(Graph g, Type v) {

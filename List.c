@@ -20,7 +20,7 @@ struct strList {
 
 
 List list_create(void (*destructor)(Type)) {
-    List l = (List) malloc(sizeof(struct strList));
+    List l = (List) calloc(1, sizeof(struct strList));
     l->size = 0;
     l->first = l->last = l->postLast = l->preFirst = NULL;
     l->destructor = destructor;
@@ -57,14 +57,14 @@ int list_size(List l) {
 void list_add(List l, Type t) {
     if (l == NULL) return;
 
-    Node n = (Node) malloc(sizeof(struct strNode));
+    Node n = (Node) calloc(1, sizeof(struct strNode));
     n->data = t;
     n->prior = NULL;
     n->next = NULL;
 
     if (l->size == 0) {
-        l->preFirst = (Node) malloc(sizeof(struct strNode));
-        l->postLast = (Node) malloc(sizeof(struct strNode));
+        l->preFirst = (Node) calloc(1, sizeof(struct strNode));
+        l->postLast = (Node) calloc(1, sizeof(struct strNode));
         l->last = l->first = n;
         l->preFirst->next = l->postLast->prior = n;
     } else {
@@ -87,12 +87,12 @@ Type list_get(List l, int p) {
         current = l->last;
         for (int i = 0; i < p; ++i) current = current->prior;
     }
-    return current->data;
+    if (current) return current->data;
+    else return current;
 }
 
 void list_set(List l, Type t, int p) {
-    Node current = (Node) malloc(sizeof(struct strNode));
-    current = NULL;
+    Node current = (Node) calloc(1, sizeof(struct strNode));
     if (p < 0 || p >= l->size) return;
     else if (p < l->size / 2) {
         current = l->first;
@@ -107,7 +107,7 @@ void list_set(List l, Type t, int p) {
 
 Type list_remove(List l, int p) {
     Node current = NULL;
-    Type *toReturn;
+    Type toReturn;
     if (p == 0 && l->size == 1) {
         toReturn = l->first->data;
         free(l->first);
