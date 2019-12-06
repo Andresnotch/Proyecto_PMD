@@ -119,16 +119,18 @@ void graph_deleteEdge(Graph g, Type u, Type v) {
     if(!f_u) return;
     it = list_begin(tL);
     // f_u es badera para found el nodo v
-    int f_v = 1;
+    int f_v = 1, p = -1;
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
+        p++;
         // Compara el elemento en el iterador con v
         f_v = g->cF(list_data(it),v);
-        if (f_v) {
-            list_destroy(list_data(it));
+        if (f_v == 0) {
+            list_remove(tL,p);
             break;
         }
     }
+    if(g->debug == 0) graph_print(g);
 }
 
 void graph_mode(Graph g, int m) {
