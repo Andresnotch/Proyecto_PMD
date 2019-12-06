@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "Graph.h"
+#include "bool.h"
 
 void printStr(Type val);
 

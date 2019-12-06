@@ -5,13 +5,12 @@
 #ifndef PROYECTO_LIST_H
 #define PROYECTO_LIST_H
 
-typedef void *Type;
+#include "bool.h"
+
 typedef struct strList *List;
 typedef struct strNode *Node;
 typedef Node Iterator;
-typedef enum {
-    FALSE, TRUE
-} bool;
+
 
 List list_create(void (*destructor)(Type));
 

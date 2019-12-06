@@ -5,7 +5,7 @@
 #ifndef PROYECTO_GRAPH_H
 #define PROYECTO_GRAPH_H
 
-typedef void *Type;
+
 
 typedef int (*CompareFunc)(Type, Type);
 
