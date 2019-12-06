@@ -24,7 +24,7 @@ typedef struct strPair Pair;
 void graph_print(Graph g);
 
 Graph graph_create(PrintFunc printer, DestroyFunc destructor, CompareFunc comp) {
-    Graph g = calloc(1,sizeof(struct strGraph));
+    Graph g = calloc(1, sizeof(struct strGraph));
     g->dF = destructor;
     g->pF = printer;
     g->cF = comp;
@@ -33,7 +33,7 @@ Graph graph_create(PrintFunc printer, DestroyFunc destructor, CompareFunc comp) 
 }
 
 void graph_destroy(Graph g) {
-    if(!g) return;
+    if (!g) return;
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
@@ -44,25 +44,25 @@ void graph_destroy(Graph g) {
 }
 
 void graph_addVertex(Graph g, Type u) {
-    if(!g) return;
+    if (!g) return;
     if (!g->adjacencyList) {
         g->adjacencyList = list_create(g->dF);
     }
     List tL = list_create(g->dF);
-    list_add(tL,u);
+    list_add(tL, u);
     list_add(g->adjacencyList, tL);
     if (g->debug == 0) graph_print(g);
 }
 
 void graph_deleteVertex(Graph g, Type v) {
-    if(!g) return;
+    if (!g) return;
     // Bandera found para v
     int f_v = 1;
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
         // Compara el elemento 0 de la lista en el iterador con v
-        f_v = g->cF(list_get(list_data(it),0),v);
+        f_v = g->cF(list_get(list_data(it), 0), v);
         if (f_v) {
             list_destroy(list_data(it));
             break;
@@ -71,66 +71,73 @@ void graph_deleteVertex(Graph g, Type v) {
 }
 
 void graph_addEdge(Graph g, Type u, Type v, double weight) {
-    if(!g) return;
+    if (!g) return;
     // f_x son banderas found para los nodos u y v
-    int f_u = 1, f_v = 1;
-    List tL = NULL;
+    int f_u = 1, f_v = 1, idx_u = -1 ;
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
         // Si no ha encontrado a v, compara el elemento 0
         // de la lista en el iterador con v
-        if(f_v != 0) f_v = g->cF(list_get(list_data(it), 0), v);
+        if (f_v != 0) f_v = g->cF(list_get((List) list_data(it), 0), v);
         // Compara el elemento 0 de la lista en el iterador con u
-        if(f_u != 0) f_u = g->cF(list_get(list_data(it),0),u);
-        if (f_u == 0) {
-            tL = list_data(it);
-            if(f_v == 0) break;
+        if (f_u != 0) {
+            idx_u++;
+            f_u = g->cF(list_get((List) list_data(it), 0), u);
         }
+        if (f_u == 0 && f_v == 0)  break;
     }
-    Pair data;
-    data.v = v;
-    data.weight = weight;
-    if(f_u != 0 || f_v != 0) {
-        if(g->debug == 0) printf("NO se agrego edge\n");
-        if(g->debug == 0) graph_print(g);
+    if (f_u != 0 || f_v != 0) {
+        if (g->debug == 0) printf("NO se agrego edge\n");
+        if (g->debug == 0) graph_print(g);
         return;
     }
-    list_add(tL,&data);
-    if(g->debug == 0) printf("SI se agrego edge\n");
-    if(g->debug == 0) graph_print(g);
+    Pair *data = calloc(1, sizeof(struct strPair));
+    data->v = v;
+    data->weight = weight;
+    list_add(list_get(g->adjacencyList,idx_u), data);
+    if (g->debug == 0) printf("SI se agrego edge\n");
+    if (g->debug == 0) graph_print(g);
 }
 
 void graph_deleteEdge(Graph g, Type u, Type v) {
-    if(!g) return;
+    if (!g) return;
     // f_u es badera para found el nodo u
     int f_u = 1;
     List tL = NULL;
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
-        // Compara el elemento 0 de la lista en el iterador con u
-        f_u = g->cF(list_get(list_data(it),0),u);
+        // Si no ha encontrado a u, compara el elemento 0
+        // de la lista en el iterador con u
+        if (f_u != 0) f_u = g->cF(list_get((List) list_data(it), 0), u);
         if (f_u) {
             tL = list_data(it);
             break;
         }
     }
-    if(!f_u) return;
+    if (!f_u) {
+        printf("NO se elimino edge\n");
+        return;
+    }
     it = list_begin(tL);
     // f_u es badera para found el nodo v
     int f_v = 1, p = -1;
+    Pair * tP = NULL;
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
         p++;
         // Compara el elemento en el iterador con v
-        f_v = g->cF(list_data(it),v);
+        tP = (Pair*)list_data(it);
+        f_v = g->cF(tP->v, v);
         if (f_v == 0) {
-            list_remove(tL,p);
+            list_remove(tL, p);
+            printf("Si se elimino edge\n");
+            if (g->debug == 0) graph_print(g);
             break;
         }
     }
-    if(g->debug == 0) graph_print(g);
+    if (g->debug == 0) graph_print(g);
 }
 
 void graph_mode(Graph g, int m) {
@@ -138,25 +145,25 @@ void graph_mode(Graph g, int m) {
 }
 
 void graph_print(Graph g) {
-    if(!g || list_size(g->adjacencyList) <= 0) return;
-    printf("Tamanio de adjList: %d\n",list_size(g->adjacencyList));
+    if (!g || list_size(g->adjacencyList) <= 0) return;
+    printf("Tamanio de adjList: %d\n", list_size(g->adjacencyList));
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
         List nl = list_data(it);
-        g->pF(list_get(nl,0));
-        if(list_size(nl) == 1){
+        g->pF(list_get(nl, 0));
+        if (list_size(nl) == 1) {
             printf("\n");
             continue;
         }
         Iterator itn = list_begin(nl);
-        while (list_hasNext(it)) {
+        while (list_hasNext(itn)) {
             for (int i = 0; i < 2; ++i)
-                itn = (Iterator) list_next(it);
+                itn = (Iterator) list_next(itn);
             printf(" -> {");
-            Pair* datos =  list_data(itn);
+            Pair *datos = list_data(itn);
             g->pF(datos->v);
-            printf(", %f }",datos->weight);
+            printf(", %f }", datos->weight);
         }
         printf("\n");
     }
@@ -186,8 +193,8 @@ void dijkstra(Graph g, Type start) {
 
     // Se marca como completo el nodo a.
 
-     // Se toma como próximo nodo actual el de menor valor en D (puede hacerse almacenando los valores en una cola de
-     // prioridad) y se regresa al paso 3, mientras existan nodos no marcados.
+    // Se toma como próximo nodo actual el de menor valor en D (puede hacerse almacenando los valores en una cola de
+    // prioridad) y se regresa al paso 3, mientras existan nodos no marcados.
 
 
 
