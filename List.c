@@ -6,21 +6,20 @@
 
 #include <stdlib.h>
 
-struct strNode
-{
+struct strNode {
     Type data;
-    struct strNode * next, * prior;
+    struct strNode *next, *prior;
 };
 
-struct strList
-{
-    struct strNode * first, * last, *preFirst, *postLast;
+struct strList {
+    struct strNode *first, *last, *preFirst, *postLast;
     int size;
+
     void (*destructor)(void *);
 };
 
 
-List list_create(void (*destructor)(Type)){
+List list_create(void (*destructor)(Type)) {
     List l = (List) malloc(sizeof(struct strList));
     l->size = 0;
     l->first = l->last = l->postLast = l->preFirst = NULL;
@@ -29,14 +28,14 @@ List list_create(void (*destructor)(Type)){
     return l;
 }
 
-void list_destroy(List l){
+void list_destroy(List l) {
     if (l == NULL) return;
 
     Node aux1, aux2;
 
     aux1 = l->first;
 
-    while(aux1 != NULL) {
+    while (aux1 != NULL) {
         aux2 = aux1->next;
 
         if (l->destructor != NULL)
@@ -50,12 +49,12 @@ void list_destroy(List l){
     free(l);
 }
 
-int  list_size(List l){
-    if (l == NULL) return -1 ;
+int list_size(List l) {
+    if (l == NULL) return -1;
     return l->size;
 }
 
-void list_add(List l, Type t){
+void list_add(List l, Type t) {
     if (l == NULL) return;
 
     Node n = (Node) malloc(sizeof(struct strNode));
@@ -63,13 +62,12 @@ void list_add(List l, Type t){
     n->prior = NULL;
     n->next = NULL;
 
-    if (l->size == 0){
+    if (l->size == 0) {
         l->preFirst = (Node) malloc(sizeof(struct strNode));
         l->postLast = (Node) malloc(sizeof(struct strNode));
         l->last = l->first = n;
         l->preFirst->next = l->postLast->prior = n;
-    }
-    else {
+    } else {
         n->prior = l->last;
         l->last->next = n;
     }
@@ -78,39 +76,39 @@ void list_add(List l, Type t){
     l->size++;
 }
 
-Type list_get(List l, int p){
+Type list_get(List l, int p) {
     Node current = NULL;
     if (p < 0 || p >= l->size) return current;
-    else if (p < l->size/2){
+    else if (p < l->size / 2) {
         current = l->first;
         for (int i = 0; i < p; ++i) current = current->next;
 
-    }else if(p <= l->size) {
+    } else if (p <= l->size) {
         current = l->last;
         for (int i = 0; i < p; ++i) current = current->prior;
     }
     return current->data;
 }
 
-void list_set(List l, Type t, int p){
+void list_set(List l, Type t, int p) {
     Node current = (Node) malloc(sizeof(struct strNode));
     current = NULL;
     if (p < 0 || p >= l->size) return;
-    else if (p < l->size/2){
+    else if (p < l->size / 2) {
         current = l->first;
         for (int i = 0; i < p; ++i) current = current->next;
 
-    }else if(p <= l->size) {
+    } else if (p <= l->size) {
         current = l->last;
         for (int i = 0; i < p; ++i) current = current->prior;
     }
     current->data = t;
 }
 
-Type list_remove(List l, int p){
+Type list_remove(List l, int p) {
     Node current = NULL;
-    Type * toReturn;
-    if (p == 0 && l->size == 1){
+    Type *toReturn;
+    if (p == 0 && l->size == 1) {
         toReturn = l->first->data;
         free(l->first);
         free(l->preFirst);
@@ -120,11 +118,11 @@ Type list_remove(List l, int p){
         return toReturn;
     }
     if (p < 0 || p >= l->size) return current;
-    else if (p < l->size/2){
+    else if (p < l->size / 2) {
         current = l->first;
         for (int i = 0; i < p; ++i) current = current->next;
 
-    }else if(p <= l->size) {
+    } else if (p <= l->size) {
         current = l->last;
         for (int i = 0; i < p; ++i) current = current->prior;
     }
@@ -138,35 +136,35 @@ Type list_remove(List l, int p){
     return toReturn;
 }
 
-Iterator list_begin(List l){
+Iterator list_begin(List l) {
     Iterator i = l->preFirst;
     return i;
 
 }
 
-Iterator list_end(List l){
+Iterator list_end(List l) {
     Iterator i = l->postLast;
     return i;
 }
 
-bool list_hasNext(Iterator i){
+bool list_hasNext(Iterator i) {
     if (i && i->next) return TRUE;
     return FALSE;
 }
 
-bool list_hasPrior(Iterator i){
+bool list_hasPrior(Iterator i) {
     if (i && i->prior) return TRUE;
     return FALSE;
 }
 
-Iterator list_next(Iterator i){
+Iterator list_next(Iterator i) {
     if (list_hasNext(i)) i = i->next;
 }
 
-Iterator list_prior(Iterator i){
+Iterator list_prior(Iterator i) {
     if (list_hasPrior(i)) i = i->prior;
 }
 
-Type list_data(Iterator i){
+Type list_data(Iterator i) {
     return i->data;
 }

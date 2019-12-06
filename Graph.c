@@ -169,5 +169,24 @@ void DFS(Graph g) {
 }
 
 void dijkstra(Graph g, Type start) {
+    // Inicializar todas las distancias en D con un valor infinito relativo, ya que son desconocidas al principio,
+    // exceptuando la de x, que se debe colocar en 0, debido a que la distancia de x a x sería 0.
+
+    // Sea a = x (Se toma a como nodo actual.)
+
+    // Se recorren todos los nodos adyacentes de a, excepto los nodos marcados. Se les llamará nodos no marcados vi.
+
+    // Para el nodo actual, se calcula la distancia tentativa desde dicho nodo hasta sus vecinos con la siguiente
+    // fórmula: dt(vi) = Da + d(a,vi). Es decir, la distancia tentativa del nodo ‘vi’ es la distancia que actualmente
+    // tiene el nodo en el vector D más la distancia desde dicho nodo ‘a’ (el actual) hasta el nodo vi. Si la distancia
+    // tentativa es menor que la distancia almacenada en el vector, entonces se actualiza el vector con esta distancia
+    // tentativa. Es decir, si dt(vi) < Dvi → Dvi = dt(vi)
+
+    // Se marca como completo el nodo a.
+
+     // Se toma como próximo nodo actual el de menor valor en D (puede hacerse almacenando los valores en una cola de
+     // prioridad) y se regresa al paso 3, mientras existan nodos no marcados.
+
+
 
 }
