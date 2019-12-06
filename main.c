@@ -15,7 +15,7 @@ int main() {
 
     graph_addEdge(g, s1, s2, 2.9);
 
-    graph_deleteEdge(g, s1, s2);
+    graph_deleteVertex(g,s2);
 
 
     return 0;

@@ -56,18 +56,30 @@ void graph_addVertex(Graph g, Type u) {
 
 void graph_deleteVertex(Graph g, Type v) {
     if (!g) return;
-    // Bandera found para v
-    int f_v = 1;
+    // Borrar todos los Edges que lleven al Vertex que se va a eliminar
+    Iterator dE = list_begin(g->adjacencyList);
+    while (list_hasNext(dE)) {
+        dE = (Iterator) list_next(dE);
+        graph_deleteEdge(g,list_get(list_data(dE), 0),v);
+    }
+    // Borrar el Vertex
+    int f_v = 1, idx_v = -1;
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
+        ++idx_v;
         // Compara el elemento 0 de la lista en el iterador con v
         f_v = g->cF(list_get(list_data(it), 0), v);
-        if (f_v) {
+        if (f_v == 0) {
             list_destroy(list_data(it));
-            break;
+            list_remove(g->adjacencyList,idx_v);
+            if (g->debug == 0) printf("SI se borro vertex\n");
+            if (g->debug == 0) graph_print(g);
+            return;
         }
     }
+    if (g->debug == 0) printf("NO se borro vertex\n");
+    if (g->debug == 0) graph_print(g);
 }
 
 void graph_addEdge(Graph g, Type u, Type v, double weight) {
@@ -111,18 +123,19 @@ void graph_deleteEdge(Graph g, Type u, Type v) {
         // Si no ha encontrado a u, compara el elemento 0
         // de la lista en el iterador con u
         if (f_u != 0) f_u = g->cF(list_get((List) list_data(it), 0), u);
-        if (f_u) {
+        if (f_u == 0) {
             tL = list_data(it);
             break;
         }
     }
-    if (!f_u) {
+    if (f_u != 0) {
         printf("NO se elimino edge\n");
         return;
     }
     it = list_begin(tL);
+    it = (Iterator) list_next(it);
     // f_u es badera para found el nodo v
-    int f_v = 1, p = -1;
+    int f_v = 1, p = 0;
     Pair * tP = NULL;
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
@@ -137,7 +150,6 @@ void graph_deleteEdge(Graph g, Type u, Type v) {
             break;
         }
     }
-    if (g->debug == 0) graph_print(g);
 }
 
 void graph_mode(Graph g, int m) {

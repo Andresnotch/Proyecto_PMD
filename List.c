@@ -124,11 +124,13 @@ Type list_remove(List l, int p) {
 
     } else if (p <= l->size) {
         current = l->last;
-        for (int i = 0; i < p; ++i) current = current->prior;
+        for (int i = l->size - 1; i > p; --i) current = current->prior;
     }
 
     if (current->next) current->next->prior = current->prior;
     if (current->prior) current->prior->next = current->next;
+    if (current == l->last) l->last = current->prior;
+    if (current == l->first) l->first = current->next;
     toReturn = current->data;
     free(current);
     l->size--;
