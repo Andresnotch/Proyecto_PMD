@@ -80,20 +80,25 @@ void graph_addEdge(Graph g, Type u, Type v, double weight) {
         it = (Iterator) list_next(it);
         // Si no ha encontrado a v, compara el elemento 0
         // de la lista en el iterador con v
-        if(!f_v) f_v = g->cF(list_get(list_data(it),0),v);
+        if(f_v != 0) f_v = g->cF(list_get(list_data(it), 0), v);
         // Compara el elemento 0 de la lista en el iterador con u
-        f_u = g->cF(list_get(list_data(it),0),u);
-        f_v = g->cF(list_get(list_data(it),0),v);
-        if (f_u) {
+        if(f_u != 0) f_u = g->cF(list_get(list_data(it),0),u);
+        if (f_u == 0) {
             tL = list_data(it);
-            if(f_v) break;
+            if(f_v == 0) break;
         }
     }
     Pair data;
     data.v = v;
     data.weight = weight;
-    if(!f_u || !f_v) return;
+    if(f_u != 0 || f_v != 0) {
+        if(g->debug == 0) printf("NO se agrego edge\n");
+        if(g->debug == 0) graph_print(g);
+        return;
+    }
     list_add(tL,&data);
+    if(g->debug == 0) printf("SI se agrego edge\n");
+    if(g->debug == 0) graph_print(g);
 }
 
 void graph_deleteEdge(Graph g, Type u, Type v) {
