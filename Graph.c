@@ -11,6 +11,7 @@
 
 struct strGraph {
     List adjacencyList;
+    HashFunc hF;
     CompareFunc cF;
     DestroyFunc dF;
     PrintFunc pF;
@@ -209,6 +210,7 @@ void BFS(Graph g, Type start) {
     Queue gris = queue_create(NULL);
     Queue  negro = queue_create(NULL);
     Queue  blanca = queue_create(NULL);
+    Map Dad = map_create(list_size(g->adjacencyList),g->hF,g->cF);
 
     Iterator dE = list_begin(g->adjacencyList);
     while (list_hasNext(dE)) {
