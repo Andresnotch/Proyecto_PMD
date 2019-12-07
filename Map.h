@@ -25,7 +25,7 @@ typedef void (*PrintFunc) (Type);
 typedef int (*CompareFunc)(Type, Type);
 
 
-Map map_create(int m, HashFunc hF, CompareFunc cF);
+Map map_create(int m, HashFunc hF, EqualsFunc eF, DestroyFunc aDestructor, DestroyFunc bDestructor);
 void map_destroy(Map);
 int  map_size(Map);
 void map_put(Map m, Type k, Type v);

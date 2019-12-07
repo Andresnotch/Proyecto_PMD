@@ -11,7 +11,6 @@
 
 struct strGraph {
     List adjacencyList;
-    HashFunc hF;
     CompareFunc cF;
     DestroyFunc dF;
     PrintFunc pF;

@@ -67,7 +67,16 @@ void map_put(Map m, Type k, Type v) {
         target = list_create(NULL);
         m->table[hash] = target;
     }
-    list_add(m->table[hash], datos);
+    Iterator it = list_begin(m->table[hash]); int p = -1;
+    bool found = FALSE;
+    pair *temp = NULL;
+    while (list_hasNext(it) && !found )  {
+        it = (Iterator) list_next(it); p++;
+        temp = list_data(it);
+        found = m->equalsFunc(temp->key,v);
+    }
+    if(!found) list_add(m->table[hash], datos);
+    else list_set(m->table[hash],datos,p);
     m->size++;
 }
 

@@ -8,7 +8,7 @@ int AlphOrder(Type s1, Type s2);
 
 int main() {
     Graph g = graph_create(printStr, NULL, AlphOrder);
-    graph_mode(g, 0);
+    //graph_mode(g, 0);
     char *s1 = "Ganso";
     char *s2 = "Pato";
     graph_addVertex(g, s1);
@@ -38,4 +38,13 @@ int AlphOrder(Type s1, Type s2) {
     if ((str1[i] == '\0' && str2[i] != '\0')) return str2[i];
     if ((str1[i] != '\0' && str2[i] == '\0')) return str1[i];
     return 0;
+}
+
+int hashstr(Type str, int m) {
+    char *input = (char*) str;
+    int total = 0, i = 0;
+    while (input[i] != '\0')
+        total += 17 * total + input[i++];
+    total %= m;
+    return total;
 }
