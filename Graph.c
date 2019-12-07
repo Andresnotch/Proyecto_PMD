@@ -272,7 +272,8 @@ void dijkstra(Graph g, Type start) {
         dE = (Iterator) list_next(dE);
         if(g->cF(list_get(list_data(dE),0),start) != 0) {
             queue_offer(blanca, list_get(list_data(dE), 0));
-            //falta agregar el la distancia infinita mediante las tablas hash
+            //falta agregar el la distancia infinita mediante las tablas hash y crear 3 mapas
+
 
         }
     }
