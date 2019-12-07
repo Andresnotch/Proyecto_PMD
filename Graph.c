@@ -213,7 +213,11 @@ void BFS(Graph g, Type start) {
     Queue procesados = queue_create(NULL);
 
     //inicia recorrido del grafo;
+
     Iterator dE = list_begin(g->adjacencyList);
+
+    //lo uso para los padres
+    Iterator di = list_begin(g->adjacencyList);
     typedef struct strvertex * vertex;
 
     typedef struct{
@@ -242,9 +246,21 @@ void BFS(Graph g, Type start) {
             Vi.dist = 888;
             vertex = NULL;
             Node = n;
-            //queue_poll()
+            //falta meter las estructuras en los nodos.
+            queue_offer(blancos, list_get(list_data(dE), 0));
         }
     }
+    if(queue_isEmpty(blancos))return;
+
+    int * p;
+    p = queue_poll(blancos);
+    vi.color = "gris";
+    //vi.dist = ? ; // algo así como  di->vi.dist + 1
+    //vertex = ? ;//di-vi que en el primer caso sería el vs y después se va recorriendo hasta el final.
+    queue_offer(gris, list_get(list_data(dE), 0));
+
+
+
 
 
 
