@@ -5,7 +5,7 @@
 #ifndef PROYECTO_GRAPH_H
 #define PROYECTO_GRAPH_H
 
-
+typedef void *Type;
 
 typedef int (*CompareFunc)(Type, Type);
 
@@ -31,7 +31,7 @@ void graph_mode(Graph g, int m);
 
 void BFS(Graph g, Type start);
 
-void DFS(Graph g);
+void DFS(Graph g, Type start);
 
 void dijkstra(Graph g, Type start);
 

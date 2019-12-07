@@ -7,6 +7,7 @@
 #include "Graph.h"
 #include "Map.h"
 #include "List.h"
+#include "Queue.h"
 
 struct strGraph {
     List adjacencyList;
@@ -182,32 +183,135 @@ void graph_print(Graph g) {
     }
 }
 
+/* Setup de todos los vértices menos s
+      Para todo vértice en el grafo
+          Su color es blanco
+          Su distancia es infinita (algún valor muy grande que represente esto)
+          Su padre es nulo (porque no ha sido descubierto)
+	Setup del vértice s
+      Su color es gris
+      Su distancia es 0 (no hay que recorrer ninguna arista)
+      Su padre es nulo (no hay otro vértice a partir del cual lo hayamos descubierto)
+      Inicializamos la cola q  y le agregamos s
+	Recorrido
+      Mientras la cola no esté vacía…
+          Extraer el primer vértice de la cola: u
+          Para cada vértice v en la lista de adyacencia de u:
+              Si v es blanco (no había sido descubierto)
+                  Cambiar el color de v a gris
+                  Asignar la distancia de v a (la distancia de u) + 1
+                  Asignar u como el padre de v
+                  Encolar a v en q
+         Marcar a u como negro (ya procesado)
+*/
+
 void BFS(Graph g, Type start) {
+    Queue gris = queue_create(NULL);
+    Queue  negro = queue_create(NULL);
+    Queue  blanca = queue_create(NULL);
+
+    Iterator dE = list_begin(g->adjacencyList);
+    while (list_hasNext(dE)) {
+        dE = (Iterator) list_next(dE);
+        if(g->cF(list_get(list_data(dE),0),start) != 0) {
+            queue_offer(blanca, list_get(list_data(dE), 0));
+            //falta agregar el la distancia infinita mediante las tablas hash
+
+        }
+    }
+
+
+
+}
+/*Procedimiento inicial
+  Para cada vértice u
+      El color de u es blanco
+      El padre de u es nulo
+  El tiempo t empieza en 0
+  Después del setup inicial, para cada vértice u…
+Si el color de u es blanco, llamar a la función recursiva a partir de ese vértice
+  Función recursiva de visita (recibe al grafo y a un vértice u)
+  El tiempo crece en 1
+  Se asigna el tiempo como tiempo de descubrimiento de u
+  Se asigna gris como el color de u (¡acaba de ser descubierto!)
+  Por cada vértice v en la lista de adyacencia de u…
+      Si v es blanco…
+          Asignar u como el padre de v
+          Visitar recursivamente a v
+          Se asigna negro como el color de u
+          El tiempo crece en 1
+          Se asigna el tiempo como tiempo de terminación de u
+*/
+
+void DFS(Graph g,Type start) {
+    Queue gris = queue_create(NULL);
+    Queue  negro = queue_create(NULL);
+    Queue  blanca = queue_create(NULL);
+    int tam = 0;
+    Iterator dE = list_begin(g->adjacencyList);
+    while (list_hasNext(dE)) {
+        dE = (Iterator) list_next(dE);
+        if(g->cF(list_get(list_data(dE),0),start) != 0) {
+            queue_offer(blanca, list_get(list_data(dE), 0));
+
+
+        }
+    }
+
 
 }
 
-void DFS(Graph g) {
-
-}
 
 void dijkstra(Graph g, Type start) {
-    // Inicializar todas las distancias en D con un valor infinito relativo, ya que son desconocidas al principio,
-    // exceptuando la de x, que se debe colocar en 0, debido a que la distancia de x a x sería 0.
+    Queue gris = queue_create(NULL);
+    Queue  negro = queue_create(NULL);
+    Queue  blanca = queue_create(NULL);
 
-    // Sea a = x (Se toma a como nodo actual.)
+    Iterator dE = list_begin(g->adjacencyList);
+    while (list_hasNext(dE)) {
+        dE = (Iterator) list_next(dE);
+        if(g->cF(list_get(list_data(dE),0),start) != 0) {
+            queue_offer(blanca, list_get(list_data(dE), 0));
+            //falta agregar el la distancia infinita mediante las tablas hash
 
-    // Se recorren todos los nodos adyacentes de a, excepto los nodos marcados. Se les llamará nodos no marcados vi.
+        }
+    }
+    /*
+        Inicialización (setup)
+        Para cada vértice v…
+            La distancia de v es “infinita”
+            El padre de v es nulo
+        La distancia del vértice de inicio s es 0 (y su padre es nulo)
+    El conjunto S empieza vacío
+    Insertar s en la cola de prioridad Q
+    Mientras Q no esté vacía…
+    Tomar el nodo mínimo de Q: u
+    Agregar u al conjunto S
+     Por cada vértice v en la lista de adyacencia de u y no contenido en S…
+                                                i. 	Si la distancia de v es mayor que la suma de {la distancia de u} y {el peso del arista (u, v)}
+    Asignar tal suma como la distancia de v
+    Asignar a u como el padre de v (pues a través de u se puede llegar a v por una ruta más barata)
 
-    // Para el nodo actual, se calcula la distancia tentativa desde dicho nodo hasta sus vecinos con la siguiente
-    // fórmula: dt(vi) = Da + d(a,vi). Es decir, la distancia tentativa del nodo ‘vi’ es la distancia que actualmente
-    // tiene el nodo en el vector D más la distancia desde dicho nodo ‘a’ (el actual) hasta el nodo vi. Si la distancia
-    // tentativa es menor que la distancia almacenada en el vector, entonces se actualiza el vector con esta distancia
-    // tentativa. Es decir, si dt(vi) < Dvi → Dvi = dt(vi)
 
-    // Se marca como completo el nodo a.
+     Explicación de wiki
+      Inicializar todas las distancias en D con un valor infinito relativo, ya que son desconocidas al principio,
+     exceptuando la de x, que se debe colocar en 0, debido a que la distancia de x a x sería 0.
 
-    // Se toma como próximo nodo actual el de menor valor en D (puede hacerse almacenando los valores en una cola de
-    // prioridad) y se regresa al paso 3, mientras existan nodos no marcados.
+     Sea a = x (Se toma a como nodo actual.)
+
+     Se recorren todos los nodos adyacentes de a, excepto los nodos marcados. Se les llamará nodos no marcados vi.
+
+     Para el nodo actual, se calcula la distancia tentativa desde dicho nodo hasta sus vecinos con la siguiente
+     fórmula: dt(vi) = Da + d(a,vi). Es decir, la distancia tentativa del nodo ‘vi’ es la distancia que actualmente
+     tiene el nodo en el vector D más la distancia desde dicho nodo ‘a’ (el actual) hasta el nodo vi. Si la distancia
+     tentativa es menor que la distancia almacenada en el vector, entonces se actualiza el vector con esta distancia
+     tentativa. Es decir, si dt(vi) < Dvi → Dvi = dt(vi)
+
+     Se marca como completo el nodo a.
+
+     Se toma como próximo nodo actual el de menor valor en D (puede hacerse almacenando los valores en una cola de
+     prioridad) y se regresa al paso 3, mientras existan nodos no marcados.
+     */
 
 
 
