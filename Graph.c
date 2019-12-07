@@ -206,17 +206,22 @@ void graph_print(Graph g) {
 */
 
 void BFS(Graph g, Type start) {
-    Queue gris = queue_create(NULL);
-    Queue  negro = queue_create(NULL);
-    Queue  blanca = queue_create(NULL);
+    typedef struct strvertex * vertex;
+    typedef struct{
+        Node n;
+        char color;
+        int dist;
+        vertex parent;
+    }strvertex;
+
+    Queue encontrados = queue_create(NULL);
+    Queue procesados = queue_create(NULL);
     // Map Dad = map_create(list_size(g->adjacencyList), g->hf, g->dF, g->cF)
 
     Iterator dE = list_begin(g->adjacencyList);
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
         if(g->cF(list_get(list_data(dE),0),start) != 0) {
-            queue_offer(blanca, list_get(list_data(dE), 0));
-            //falta agregar el la distancia infinita mediante las tablas hash
 
         }
     }
@@ -224,30 +229,6 @@ void BFS(Graph g, Type start) {
 
 
 }
-
-//prototipo de función hash
-/*
- int hash(char key[10],int size)
-{
-    if(key==NULL){
-        return 1;
-    }
-    int h=0;
-    h+=key[0];//siempre se suma la primera pocisión, no importa que sea
-    int x[6];//arreglo que nos va a ayudar a multiplicar más adelante cada cantidad de combinaciones posibles
-    for(int i = 0; i < 6; i++){
-    x[i] = 10;
-    }
-    for(int i=1;i<6;i++){
-        h*=x[i]; //cantidad de combinaciones posibles, en este caso es un arreglo
-        h%=size;//dividir entre el tamaño de la tabla hash (para no desbordar el dato)
-        h+=key[i];//sumar el siguiente valor
-        h%=size;//dividir entre el tamaño de la tabla hash (para no desbordar el dato)
-    }
-    h%=size;//dividir entre el tamaño de la tabla hash (para no desbordar el dato), por seguridad si nos dan un sólo caracter.
-    return h;
-}
- */
 
 /*Procedimiento inicial
   Para cada vértice u
@@ -270,6 +251,14 @@ Si el color de u es blanco, llamar a la función recursiva a partir de ese vért
 */
 
 void DFS(Graph g,Type start) {
+    typedef struct strvertex * vertex;
+    typedef struct{
+        Node n;
+        char color;
+        int discover;
+        int termination;
+        vertex parent;
+    }strvertex;
     Queue gris = queue_create(NULL);
     Queue  negro = queue_create(NULL);
     Queue  blanca = queue_create(NULL);
@@ -289,6 +278,14 @@ void DFS(Graph g,Type start) {
 
 
 void dijkstra(Graph g, Type start) {
+    typedef struct strvertex * vertex;
+    typedef struct{
+        Node n;
+        char color;
+        double dist;
+        vertex parent;
+    }strvertex;
+    //Crear un set que guarde todos los vertices calculados
     Queue gris = queue_create(NULL);
     Queue  negro = queue_create(NULL);
     Queue  blanca = queue_create(NULL);
