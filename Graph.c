@@ -216,10 +216,11 @@ void BFS(Graph g, Type start) {
 
     Iterator dE = list_begin(g->adjacencyList);
 
-    //lo uso para los padres
-    Iterator di = list_begin(g->adjacencyList);
+    Iterator dS = list_begin(g->adjacencyList);
     typedef struct strvertex * vertex;
-
+    char blanco[] = "blanco";
+    char negro[] = "negro";
+    char gris[] = "gris";
     typedef struct{
         Node n;
         char color[6];
@@ -229,20 +230,20 @@ void BFS(Graph g, Type start) {
 
     //vertice inicial
     vertex Vs = calloc(1, sizeof(strvertex));
-    Vs_i.color = "gris";
-    Vs_i.dist = 0;
-    vertex = NULL;
+    strcpy(Vs->color, gris);
+    Vs->dist = 0;
+    vertex = (NULL);
     //no se si funciona así
-    Node = dE;
+    Node = NULL;
 
-
+queue_offer(procesados, list_get(list_data(dS)));
 
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
         if(g->cF(list_get(list_data(dE),0),start) = 0) {
             //resto de vertices
             vertex Vi = calloc(1, sizeof(strvertex));
-            Vi.color = "blanco";
+            strcpy(vi->color, blanco);
             Vi.dist = 888;
             vertex = NULL;
             Node = n;
@@ -251,21 +252,13 @@ void BFS(Graph g, Type start) {
         }
     }
     if(queue_isEmpty(blancos))return;
-
+    //no estoy seguro que valor es
     int * p;
     p = queue_poll(blancos);
-    vi.color = "gris";
+    strcpy(vS->color, gris);
     //vi.dist = ? ; // algo así como  di->vi.dist + 1
     //vertex = ? ;//di-vi que en el primer caso sería el vs y después se va recorriendo hasta el final.
-    queue_offer(gris, list_get(list_data(dE), 0));
-
-
-
-
-
-
-
-
+    queue_offer(encontrados, list_get(list_data(dE), 0));
 }
 
 /*Procedimiento inicial
@@ -293,17 +286,17 @@ void DFS(Graph g,Type start) {
     typedef struct{
         Node n;
         char color;
-        int tdiscover;
-        int termination;
+        int Tdiscover;
+        int Ttermination;
         vertex parent;
     }strvertex;
 
     //resto de vertices
-    vertex Vi = calloc(1, sizeof(strvertex));
-    Vi.color = "blanco";
-    Node = n;
-    int tdiscover = 0;
-    int termination;
+    vertex u = calloc(1, sizeof(strvertex));
+    u->color = "blanco";
+    Node = NULL;
+    int Tdiscover = 0;
+    int Ttermination;
 
     Queue gris = queue_create(NULL);
     Queue  negro = queue_create(NULL);
