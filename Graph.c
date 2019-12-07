@@ -206,25 +206,47 @@ void graph_print(Graph g) {
 */
 
 void BFS(Graph g, Type start) {
+
+    //Queues de valores encontrados y procesados si aún tiene A por descubrir no se ha procesado
+    Queue encontrados = queue_create(NULL);
+    Queue blancos = queue_create(NULL);
+    Queue procesados = queue_create(NULL);
+
+    //inicia recorrido del grafo;
+    Iterator dE = list_begin(g->adjacencyList);
     typedef struct strvertex * vertex;
+
     typedef struct{
         Node n;
-        char color;
+        char color[6];
         int dist;
         vertex parent;
     }strvertex;
 
-    Queue encontrados = queue_create(NULL);
-    Queue procesados = queue_create(NULL);
-    // Map Dad = map_create(list_size(g->adjacencyList), g->hf, g->dF, g->cF)
+    //vertice inicial
+    vertex Vs = calloc(1, sizeof(strvertex));
+    Vs_i.color = "gris";
+    Vs_i.dist = 0;
+    vertex = NULL;
+    //no se si funciona así
+    Node = dE;
 
-    Iterator dE = list_begin(g->adjacencyList);
+
+
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
-        if(g->cF(list_get(list_data(dE),0),start) != 0) {
-
+        if(g->cF(list_get(list_data(dE),0),start) = 0) {
+            //resto de vertices
+            vertex Vi = calloc(1, sizeof(strvertex));
+            Vi.color = "blanco";
+            Vi.dist = 888;
+            vertex = NULL;
+            Node = n;
+            //queue_poll()
         }
     }
+
+
 
 
 
@@ -255,14 +277,22 @@ void DFS(Graph g,Type start) {
     typedef struct{
         Node n;
         char color;
-        int discover;
+        int tdiscover;
         int termination;
         vertex parent;
     }strvertex;
+
+    //resto de vertices
+    vertex Vi = calloc(1, sizeof(strvertex));
+    Vi.color = "blanco";
+    Node = n;
+    int tdiscover = 0;
+    int termination;
+
     Queue gris = queue_create(NULL);
     Queue  negro = queue_create(NULL);
     Queue  blanca = queue_create(NULL);
-    int tam = 0;
+
     Iterator dE = list_begin(g->adjacencyList);
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
