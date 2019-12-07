@@ -209,7 +209,7 @@ void BFS(Graph g, Type start) {
     Queue gris = queue_create(NULL);
     Queue  negro = queue_create(NULL);
     Queue  blanca = queue_create(NULL);
-    Map Dad = map_create(list_size(g->adjacencyList),g->hF,g->cF);
+    // Map Dad = map_create(list_size(g->adjacencyList), g->hf, g->dF, g->cF)
 
     Iterator dE = list_begin(g->adjacencyList);
     while (list_hasNext(dE)) {
@@ -224,6 +224,31 @@ void BFS(Graph g, Type start) {
 
 
 }
+
+//prototipo de función hash
+/*
+ int hash(char key[10],int size)
+{
+    if(key==NULL){
+        return 1;
+    }
+    int h=0;
+    h+=key[0];//siempre se suma la primera pocisión, no importa que sea
+    int x[6];//arreglo que nos va a ayudar a multiplicar más adelante cada cantidad de combinaciones posibles
+    for(int i = 0; i < 6; i++){
+    x[i] = 10;
+    }
+    for(int i=1;i<6;i++){
+        h*=x[i]; //cantidad de combinaciones posibles, en este caso es un arreglo
+        h%=size;//dividir entre el tamaño de la tabla hash (para no desbordar el dato)
+        h+=key[i];//sumar el siguiente valor
+        h%=size;//dividir entre el tamaño de la tabla hash (para no desbordar el dato)
+    }
+    h%=size;//dividir entre el tamaño de la tabla hash (para no desbordar el dato), por seguridad si nos dan un sólo caracter.
+    return h;
+}
+ */
+
 /*Procedimiento inicial
   Para cada vértice u
       El color de u es blanco
