@@ -15,6 +15,7 @@ struct strGraph {
     DestroyFunc dF;
     PrintFunc pF;
     int debug;
+    int DFS_time;
 };
 
 struct strVertex {
@@ -74,7 +75,8 @@ void graph_deleteVertex(Graph g, Type v) {
     Iterator dE = list_begin(g->adjacencyList);
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
-        graph_deleteEdge(g,list_get(list_data(dE), 0),v);
+        Vertex *tV = list_get(list_data(dE), 0);
+        graph_deleteEdge(g,tV->n,v);
     }
     // Borrar el Vertex
     int f_v = 1, idx_v = -1;
@@ -138,7 +140,8 @@ void graph_deleteEdge(Graph g, Type u, Type v) {
         it = (Iterator) list_next(it);
         // Si no ha encontrado a u, compara el elemento 0
         // de la lista en el iterador con u
-        if (f_u != 0) f_u = g->cF(list_get((List) list_data(it), 0), u);
+        Vertex *tV = list_get(list_data(it), 0);
+        if (f_u != 0) f_u = g->cF(tV->n, u);
         if (f_u == 0) {
             tL = list_data(it);
             break;
@@ -180,7 +183,7 @@ void graph_print(Graph g) {
         it = (Iterator) list_next(it);
         List nl = list_data(it);
         Vertex *V0 = list_get(nl, 0);
-        g->pF(V0->n); printf("\n");
+        printf("\nNodo: "); g->pF(V0->n); printf("\n");
         printf("-Color: %c\n-Distancia: %f\n-Ti: %d\n-Tf: %d\n-Padre: ",V0->color,V0->dist,V0->Tdiscover,V0->Tdiscover);
         if(V0->parent) g->pF(V0->parent->n);
         else printf("NULO");
@@ -332,16 +335,52 @@ void BFS(Graph g, Type start) {/*
   Por cada vértice v en la lista de adyacencia de u…*/
 
 
-void DFS_recursive(Graph g, Type u) {
+void DFS_recursive(Graph g, List u) {
+    Vertex * uVtx = list_get(u,0);
+    uVtx->Tdiscover = ++g->DFS_time;
+    uVtx->color = 'G';
+    if(list_size(u) > 1) {
+        Iterator it = list_begin(u);
+        it = (Iterator) list_next(it);
+        Pair * tP = NULL;
+        while (list_hasNext(it)) {
+            it = (Iterator) list_next(it);
+            tP = (Pair*)list_data(it);
+            Type son = tP->v;
 
+            Iterator dE = list_begin(g->adjacencyList);
+            while (list_hasNext(dE)) {
+                dE = (Iterator) list_next(dE);
+                Vertex * tV = list_get(list_data(dE),0);
+                if(g->cF(tV->n,son) == 0 && tV->color == 'B')
+                    DFS_recursive(g,list_data(dE));
+            }
+        }
+    }
+    uVtx->color = 'N';
+    uVtx->Ttermination = ++g->DFS_time;
 }
 
 void DFS(Graph g) {
     // Setup
+    Iterator setit = list_begin(g->adjacencyList);
+    while (list_hasNext(setit)) {
+        setit = (Iterator) list_next(setit);
+        Vertex *tV = list_get(list_data(setit), 0);
+        tV->color = 'B';
+        tV->parent = NULL;
+    }
+    //Tiempo
+    g->DFS_time = 0;
+    // Recursion
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
+        List  Node = list_data(it);
+        Vertex *u = list_get(list_data(it), 0);
+        if(u->color == 'B') DFS_recursive(g, Node);
     }
+    graph_print(g);
 }
 
 
