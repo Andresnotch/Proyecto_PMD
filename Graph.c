@@ -267,6 +267,18 @@ queue_offer(procesados, list_get(list_data(dS)));
          Marcar a u como negro (ya procesado)
 */
 
+void funRecur(Graph g, vertex u){
+    while (list_hasNext(dE)) {
+        u.Tdiscover += 1;
+        u.color = "gris";
+    }
+
+}
+/* Función recursiva de visita (recibe al grafo y a un vértice u)
+  El tiempo crece en 1
+  Se asigna el tiempo como tiempo de descubrimiento de u
+  Se asigna gris como el color de u (¡acaba de ser descubierto!)
+  Por cada vértice v en la lista de adyacencia de u…*/
 
 void DFS(Graph g,Type start) {
     typedef struct strvertex * vertex;
@@ -285,8 +297,8 @@ void DFS(Graph g,Type start) {
     int Tdiscover = 0;
     int Ttermination;
 
-    Queue gris = queue_create(NULL);
-    Queue  negro = queue_create(NULL);
+    Queue descubierto = queue_create(NULL);
+    Queue  procesado = queue_create(NULL);
     Queue  blanca = queue_create(NULL);
 
     Iterator dE = list_begin(g->adjacencyList);
@@ -308,12 +320,7 @@ void DFS(Graph g,Type start) {
   El tiempo t empieza en 0
   Después del setup inicial, para cada vértice u…
 Si el color de u es blanco, llamar a la función recursiva a partir de ese vértice
-  Función recursiva de visita (recibe al grafo y a un vértice u)
-  El tiempo crece en 1
-  Se asigna el tiempo como tiempo de descubrimiento de u
-  Se asigna gris como el color de u (¡acaba de ser descubierto!)
-  Por cada vértice v en la lista de adyacencia de u…
-      Si v es blanco…
+     /* Si v es blanco…
           Asignar u como el padre de v
           Visitar recursivamente a v
           Se asigna negro como el color de u
