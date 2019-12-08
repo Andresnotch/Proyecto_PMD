@@ -5,6 +5,8 @@
 #ifndef PROYECTO_GRAPH_H
 #define PROYECTO_GRAPH_H
 
+#include "List.h"
+
 typedef void *Type;
 
 typedef int (*CompareFunc)(Type, Type);
@@ -14,6 +16,7 @@ typedef void (*PrintFunc)(Type);
 typedef void (*DestroyFunc)(Type);
 
 typedef struct strGraph *Graph;
+
 
 Graph graph_create(PrintFunc printer, DestroyFunc destructor, CompareFunc comp);
 
