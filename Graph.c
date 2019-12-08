@@ -189,17 +189,15 @@ void BFS(Graph g, Type start) {
 
     //Queues de valores encontrados y procesados si aún tiene A por descubrir no se ha procesado
     Queue encontrados = queue_create(NULL);
-    Queue blancos = queue_create(NULL);
     Queue procesados = queue_create(NULL);
 
     //inicia recorrido del grafo;
-
     Iterator dE = list_begin(g->adjacencyList);
-    Iterator dS = list_begin(g->adjacencyList);
     typedef struct strvertex * vertex;
     char blanco[] = "blanco";
     char negro[] = "negro";
     char gris[] = "gris";
+
     typedef struct{
         Node n;
         char color[6];
@@ -207,15 +205,39 @@ void BFS(Graph g, Type start) {
         vertex parent;
     }strvertex;
 
-    //vertice inicial
+    vertex Vstart = calloc(1, sizeof(struct strvertex * ));
+    Vstart->color = gris;
+    Vstart->dist = 0;
+    Vstart->parent = NULL;
+    Vstart->node = list_get(list_data(dE),0);
+    queue_offer(procesados, list_get(list_data(dE),0));
+
+    while (list_hasNext(dE)) {
+        dE = (Iterator) list_next(dE);
+        if(g->cF(list_get(list_data(dE),0),start) = 0) {
+            vertex Vstart = calloc(1, sizeof(struct strvertex * ));
+            Vstart->color = blanco;
+            Vstart->dist = 888;
+            Vstart->parent = NULL;
+            Vstart->node = list_get(list_data(dE),0);
+            queue_offer(procesados, list_get(list_data(dE),0));
+        }
+
+    while (!queue_isEmpty(procesados)) {
+        queue_peek(procesados);
+        int currentV = queue_poll(procesados);
+        printf("visitado %d \n", currentV);
+
+    }
+   /* //vertice inicial
     vertex Vs = calloc(1, sizeof(strvertex));
     strcpy(Vs->color, gris);
     Vs->dist = 0;
     vertex = (NULL);
     //no se si funciona así
-    Node = NULL;
+    Node = NULL;*/
 
-queue_offer(procesados, list_get(list_data(dS)));
+/*queue_offer(procesados, list_get(list_data(dS),0));
 
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
@@ -243,7 +265,7 @@ queue_offer(procesados, list_get(list_data(dS)));
             }
             queue_offer(encontrados, list_get(list_data(dE), 0));
         }
-    }
+    }*/
 }
 /* Setup de todos los vértices menos s
       Para todo vértice en el grafo
@@ -267,19 +289,17 @@ queue_offer(procesados, list_get(list_data(dS)));
          Marcar a u como negro (ya procesado)
 */
 
-void funRecur(Graph g, vertex u){
+/*void funRecur(Graph g, vertex u){
     while (list_hasNext(dE)) {
         u.Tdiscover += 1;
         u.color = "gris";
-    }
-
-}
+    }*/
 /* Función recursiva de visita (recibe al grafo y a un vértice u)
   El tiempo crece en 1
   Se asigna el tiempo como tiempo de descubrimiento de u
   Se asigna gris como el color de u (¡acaba de ser descubierto!)
   Por cada vértice v en la lista de adyacencia de u…*/
-
+/*
 void DFS(Graph g,Type start) {
     typedef struct strvertex * vertex;
     typedef struct{
@@ -290,16 +310,18 @@ void DFS(Graph g,Type start) {
         vertex parent;
     }strvertex;
 
+    Queue descubierto = queue_create(NULL);
+    Queue  procesado = queue_create(NULL);
+    Queue  blanca = queue_create(NULL);
+
     //resto de vertices
-    vertex u = calloc(1, sizeof(strvertex));
+    /*vertex u = calloc(1, sizeof(strvertex));
     u->color = "blanco";
     Node = NULL;
     int Tdiscover = 0;
     int Ttermination;
 
-    Queue descubierto = queue_create(NULL);
-    Queue  procesado = queue_create(NULL);
-    Queue  blanca = queue_create(NULL);
+
 
     Iterator dE = list_begin(g->adjacencyList);
     while (list_hasNext(dE)) {
@@ -310,7 +332,7 @@ void DFS(Graph g,Type start) {
 
         }
     }
-
+*/
 
 }
 /*Procedimiento inicial
