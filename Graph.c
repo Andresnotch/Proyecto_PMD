@@ -212,17 +212,53 @@ void BFS(Graph g, Type start) {
     Vstart->parent = NULL;
     Vstart->node = list_get(list_data(dE),0);
     queue_offer(procesados, list_get(list_data(dE),0));
+    //si lo activo reconoce el Vnex en las lineas 238 a 250
+   /* vertex Vnext = calloc(1, sizeof(struct strvertex *));
+    Vnext->color = blanco;
+    Vnext->dist = 888;
+    Vnext->parent = NULL;
+    Vnext->node = list_get(list_data(dE), 0);*/
 
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
-        if(g->cF(list_get(list_data(dE),0),start) = 0) {
-            vertex Vnext = calloc(1, sizeof(struct strvertex * ));
+        if (g->cF(list_get(list_data(dE), 0), start) = 0) {
+            vertex Vnext = calloc(1, sizeof(struct strvertex *));
             Vnext->color = blanco;
             Vnext->dist = 888;
             Vnext->parent = NULL;
-            Vnext->node = list_get(list_data(dE),0);
-            queue_offer(procesados, list_get(list_data(dE),0));
+            Vnext->node = list_get(list_data(dE), 0);
+            queue_offer(encontrados, list_get(list_data(dE), 0));
         }
+    }
+    while(!queue_isEmpty(encontrados)) {
+        //Extraer el primer vértice de la cola: u
+        Type Temp = queue_poll(encontrados);
+        //Para cada vértice v en la lista de adyacencia de u:
+        // Si v es blanco (no había sido descubierto)
+        if(Vnext->color == blanco){
+            // Cambiar el color de v a gris
+            Vnext->color  = gris;
+            // Asignar la distancia de v a (la distancia de u) + 1
+            Vnext->dist = Vstart->dist +1;
+            //Asignar u como el padre de v
+            //falta poner el padre
+            Vnext->parent = Vstart;
+            //Encolar a v en q
+            queue_offer(procesados,list_get(list_data(dE), 0));
+            //Marcar a u como negro (ya procesado)
+            Vnext->color=negro;
+        }
+    }
+    /*Recorrido
+      Mientras la cola no esté vacía…
+
+
+
+
+
+
+
+*/
 
    /* //vertice inicial
     vertex Vs = calloc(1, sizeof(strvertex));
@@ -272,17 +308,7 @@ void BFS(Graph g, Type start) {
       Su distancia es 0 (no hay que recorrer ninguna arista)
       Su padre es nulo (no hay otro vértice a partir del cual lo hayamos descubierto)
       Inicializamos la cola q  y le agregamos s*/
-/*Recorrido
-      Mientras la cola no esté vacía…
-          Extraer el primer vértice de la cola: u
-          Para cada vértice v en la lista de adyacencia de u:
-              Si v es blanco (no había sido descubierto)
-                  Cambiar el color de v a gris
-                  Asignar la distancia de v a (la distancia de u) + 1
-                  Asignar u como el padre de v
-                  Encolar a v en q
-         Marcar a u como negro (ya procesado)
-*/
+
 
 /*void funRecur(Graph g, vertex u){
     while (list_hasNext(dE)) {
@@ -330,7 +356,7 @@ void DFS(Graph g,Type start) {
     }
 */
 
-}
+
 /*Procedimiento inicial
   Para cada vértice u
       El color de u es blanco
