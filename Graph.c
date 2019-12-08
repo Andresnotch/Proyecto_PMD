@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "Graph.h"
 #include "Map.h"
 #include "List.h"
