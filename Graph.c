@@ -206,133 +206,16 @@ void graph_print(Graph g) {
 
 
 
-void BFS(Graph g, Type start) {/*
-
-    //Queues de valores encontrados y procesados si aún tiene A por descubrir no se ha procesado
-    Queue encontrados = queue_create(NULL);
-    Queue procesados = queue_create(NULL);
-
-    //inicia recorrido del grafo;
-    Iterator dE = list_begin(g->adjacencyList);
-    typedef struct strvertex * vertex;
-    char blanco[] = "blanco";
-    char negro[] = "negro";
-    char gris[] = "gris";
-
-    typedef struct{
-        Node n;
-        char color[6];
-        int dist;
-        vertex parent;
-    }strvertex;
-
-    vertex Vstart = calloc(1, sizeof(struct strvertex * ));
-    Vstart->color = gris;
-    Vstart->dist = 0;
-    Vstart->parent = NULL;
-    Vstart->node = list_get(list_data(dE),0);
-    queue_offer(procesados, list_get(list_data(dE),0));
-    //si lo activo reconoce el Vnex en las lineas 238 a 250
-   /* vertex Vnext = calloc(1, sizeof(struct strvertex *));
-    Vnext->color = blanco;
-    Vnext->dist = 888;
-    Vnext->parent = NULL;
-    Vnext->node = list_get(list_data(dE), 0);*/
-/*
-    while (list_hasNext(dE)) {
-        dE = (Iterator) list_next(dE);
-        if (g->cF(list_get(list_data(dE), 0), start) = 0) {
-            vertex Vnext = calloc(1, sizeof(struct strvertex *));
-            Vnext->color = blanco;
-            Vnext->dist = 888;
-            Vnext->parent = NULL;
-            Vnext->node = list_get(list_data(dE), 0);
-            queue_offer(encontrados, list_get(list_data(dE), 0));
-        }
+void BFS(Graph g, Type start) {
+    // Setup
+    Iterator setit = list_begin(g->adjacencyList);
+    while (list_hasNext(setit)) {
+        setit = (Iterator) list_next(setit);
+        Vertex *tV = list_get(list_data(setit), 0);
+        tV->color = 'B';
+        tV->parent = NULL;
     }
-    while(!queue_isEmpty(encontrados)) {
-        //Extraer el primer vértice de la cola: u
-        Type Temp = queue_poll(encontrados);
-        //Para cada vértice v en la lista de adyacencia de u:
-        // Si v es blanco (no había sido descubierto)
-        if(Vnext->color == blanco){
-            // Cambiar el color de v a gris
-            Vnext->color  = gris;
-            // Asignar la distancia de v a (la distancia de u) + 1
-            Vnext->dist = Vstart->dist +1;
-            //Asignar u como el padre de v
-            //falta poner el padre
-            Vnext->parent = Vstart;
-            //Encolar a v en q
-            queue_offer(procesados,list_get(list_data(dE), 0));
-            //Marcar a u como negro (ya procesado)
-            Vnext->color=negro;
-        }
-    }*/
-    /*Recorrido
-      Mientras la cola no esté vacía…
-*/
-
-   /* //vertice inicial
-    vertex Vs = calloc(1, sizeof(strvertex));
-    strcpy(Vs->color, gris);
-    Vs->dist = 0;
-    vertex = (NULL);
-    //no se si funciona así
-    Node = NULL;*/
-
-/*queue_offer(procesados, list_get(list_data(dS),0));
-
-    while (list_hasNext(dE)) {
-        dE = (Iterator) list_next(dE);
-        if(g->cF(list_get(list_data(dE),0),start) = 0) {
-            //resto de vertices
-            vertex Vi = calloc(1, sizeof(strvertex));
-            strcpy(vi->color, blanco);
-            Vi.dist = 888;
-            vertex = NULL;
-            Node = n;
-            //falta meter las estructuras en los nodos.
-            queue_offer(blancos, list_get(list_data(dE), 0));
-        }
-    }
-    while(queue_isEmpty(blancos) != 1) {
-        //no estoy seguro que valor es
-        int *p;
-        p = queue_poll(blancos);
-        while (list_hasNext(dE)) {
-            if(vS->color == blanco){
-                vS->color  == gris;
-                //vi->dist = vs->dis + 1
-                //parent = vs
-                strcpy(vS->color, gris);
-            }
-            queue_offer(encontrados, list_get(list_data(dE), 0));
-        }
-    }*/
 }
-/* Setup de todos los vértices menos s
-      Para todos los vertices en el grafo
-          Su color es blanco
-          Su distancia es infinita (algún valor muy grande que represente esto)
-          Su padre es nulo (porque no ha sido descubierto)
-	Setup del vértice s
-      Su color es gris
-      Su distancia es 0 (no hay que recorrer ninguna arista)
-      Su padre es nulo (no hay otro vértice a partir del cual lo hayamos descubierto)
-      Inicializamos la cola q  y le agregamos s*/
-
-
-/*void funRecur(Graph g, vertex u){
-    while (list_hasNext(dE)) {
-        u.Tdiscover += 1;
-        u.color = "gris";
-    }*/
-/* Función recursiva de visita (recibe al grafo y a un vértice u)
-  El tiempo crece en 1
-  Se asigna el tiempo como tiempo de descubrimiento de u
-  Se asigna gris como el color de u (¡acaba de ser descubierto!)
-  Por cada vértice v en la lista de adyacencia de u…*/
 
 
 void DFS_recursive(Graph g, List u) {
@@ -352,8 +235,10 @@ void DFS_recursive(Graph g, List u) {
             while (list_hasNext(dE)) {
                 dE = (Iterator) list_next(dE);
                 Vertex * tV = list_get(list_data(dE),0);
-                if(g->cF(tV->n,son) == 0 && tV->color == 'B')
-                    DFS_recursive(g,list_data(dE));
+                if(g->cF(tV->n,son) == 0 && tV->color == 'B') {
+                    tV->parent = uVtx;
+                    DFS_recursive(g, list_data(dE));
+                }
             }
         }
     }
@@ -370,7 +255,7 @@ void DFS(Graph g) {
         tV->color = 'B';
         tV->parent = NULL;
     }
-    //Tiempo
+    // Tiempo
     g->DFS_time = 0;
     // Recursion
     Iterator it = list_begin(g->adjacencyList);
