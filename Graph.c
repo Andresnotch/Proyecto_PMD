@@ -216,20 +216,14 @@ void BFS(Graph g, Type start) {
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
         if(g->cF(list_get(list_data(dE),0),start) = 0) {
-            vertex Vstart = calloc(1, sizeof(struct strvertex * ));
-            Vstart->color = blanco;
-            Vstart->dist = 888;
-            Vstart->parent = NULL;
-            Vstart->node = list_get(list_data(dE),0);
+            vertex Vnext = calloc(1, sizeof(struct strvertex * ));
+            Vnext->color = blanco;
+            Vnext->dist = 888;
+            Vnext->parent = NULL;
+            Vnext->node = list_get(list_data(dE),0);
             queue_offer(procesados, list_get(list_data(dE),0));
         }
 
-    while (!queue_isEmpty(procesados)) {
-        queue_peek(procesados);
-        int currentV = queue_poll(procesados);
-        printf("visitado %d \n", currentV);
-
-    }
    /* //vertice inicial
     vertex Vs = calloc(1, sizeof(strvertex));
     strcpy(Vs->color, gris);
@@ -269,7 +263,7 @@ void BFS(Graph g, Type start) {
     }*/
 }
 /* Setup de todos los vértices menos s
-      Para todo vértice en el grafo
+      Para todos los vertices en el grafo
           Su color es blanco
           Su distancia es infinita (algún valor muy grande que represente esto)
           Su padre es nulo (porque no ha sido descubierto)
@@ -313,10 +307,11 @@ void DFS(Graph g,Type start) {
 
     Queue descubierto = queue_create(NULL);
     Queue  procesado = queue_create(NULL);
-    Queue  blanca = queue_create(NULL);
+    Queue  blanca = queue_create(NULL);*/
 
     //resto de vertices
-    /*vertex u = calloc(1, sizeof(strvertex));
+    /*
+    vertex u = calloc(1, sizeof(strvertex));
     u->color = "blanco";
     Node = NULL;
     int Tdiscover = 0;
@@ -343,13 +338,15 @@ void DFS(Graph g,Type start) {
   El tiempo t empieza en 0
   Después del setup inicial, para cada vértice u…
 Si el color de u es blanco, llamar a la función recursiva a partir de ese vértice
-     /* Si v es blanco…
+*/
+    /*
+     Si v es blanco…
           Asignar u como el padre de v
           Visitar recursivamente a v
           Se asigna negro como el color de u
           El tiempo crece en 1
           Se asigna el tiempo como tiempo de terminación de u
-*/
+          */
 
 void dijkstra(Graph g, Type start) {
     typedef struct strvertex * vertex;
