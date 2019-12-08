@@ -183,27 +183,7 @@ void graph_print(Graph g) {
     }
 }
 
-/* Setup de todos los vértices menos s
-      Para todo vértice en el grafo
-          Su color es blanco
-          Su distancia es infinita (algún valor muy grande que represente esto)
-          Su padre es nulo (porque no ha sido descubierto)
-	Setup del vértice s
-      Su color es gris
-      Su distancia es 0 (no hay que recorrer ninguna arista)
-      Su padre es nulo (no hay otro vértice a partir del cual lo hayamos descubierto)
-      Inicializamos la cola q  y le agregamos s
-	Recorrido
-      Mientras la cola no esté vacía…
-          Extraer el primer vértice de la cola: u
-          Para cada vértice v en la lista de adyacencia de u:
-              Si v es blanco (no había sido descubierto)
-                  Cambiar el color de v a gris
-                  Asignar la distancia de v a (la distancia de u) + 1
-                  Asignar u como el padre de v
-                  Encolar a v en q
-         Marcar a u como negro (ya procesado)
-*/
+
 
 void BFS(Graph g, Type start) {
 
@@ -215,7 +195,6 @@ void BFS(Graph g, Type start) {
     //inicia recorrido del grafo;
 
     Iterator dE = list_begin(g->adjacencyList);
-
     Iterator dS = list_begin(g->adjacencyList);
     typedef struct strvertex * vertex;
     char blanco[] = "blanco";
@@ -251,35 +230,43 @@ queue_offer(procesados, list_get(list_data(dS)));
             queue_offer(blancos, list_get(list_data(dE), 0));
         }
     }
-    if(queue_isEmpty(blancos))return;
-    //no estoy seguro que valor es
-    int * p;
-    p = queue_poll(blancos);
-    strcpy(vS->color, gris);
-    //vi.dist = ? ; // algo así como  di->vi.dist + 1
-    //vertex = ? ;//di-vi que en el primer caso sería el vs y después se va recorriendo hasta el final.
-    queue_offer(encontrados, list_get(list_data(dE), 0));
+    while(queue_isEmpty(blancos) != 1) {
+        //no estoy seguro que valor es
+        int *p;
+        p = queue_poll(blancos);
+        while (list_hasNext(dE)) {
+            if(vS->color == blanco){
+                vS->color  == gris;
+                //vi->dist = vs->dis + 1
+                //parent = vs
+                strcpy(vS->color, gris);
+            }
+            queue_offer(encontrados, list_get(list_data(dE), 0));
+        }
+    }
 }
-
-/*Procedimiento inicial
-  Para cada vértice u
-      El color de u es blanco
-      El padre de u es nulo
-  El tiempo t empieza en 0
-  Después del setup inicial, para cada vértice u…
-Si el color de u es blanco, llamar a la función recursiva a partir de ese vértice
-  Función recursiva de visita (recibe al grafo y a un vértice u)
-  El tiempo crece en 1
-  Se asigna el tiempo como tiempo de descubrimiento de u
-  Se asigna gris como el color de u (¡acaba de ser descubierto!)
-  Por cada vértice v en la lista de adyacencia de u…
-      Si v es blanco…
-          Asignar u como el padre de v
-          Visitar recursivamente a v
-          Se asigna negro como el color de u
-          El tiempo crece en 1
-          Se asigna el tiempo como tiempo de terminación de u
+/* Setup de todos los vértices menos s
+      Para todo vértice en el grafo
+          Su color es blanco
+          Su distancia es infinita (algún valor muy grande que represente esto)
+          Su padre es nulo (porque no ha sido descubierto)
+	Setup del vértice s
+      Su color es gris
+      Su distancia es 0 (no hay que recorrer ninguna arista)
+      Su padre es nulo (no hay otro vértice a partir del cual lo hayamos descubierto)
+      Inicializamos la cola q  y le agregamos s*/
+/*Recorrido
+      Mientras la cola no esté vacía…
+          Extraer el primer vértice de la cola: u
+          Para cada vértice v en la lista de adyacencia de u:
+              Si v es blanco (no había sido descubierto)
+                  Cambiar el color de v a gris
+                  Asignar la distancia de v a (la distancia de u) + 1
+                  Asignar u como el padre de v
+                  Encolar a v en q
+         Marcar a u como negro (ya procesado)
 */
+
 
 void DFS(Graph g,Type start) {
     typedef struct strvertex * vertex;
@@ -314,7 +301,25 @@ void DFS(Graph g,Type start) {
 
 
 }
-
+/*Procedimiento inicial
+  Para cada vértice u
+      El color de u es blanco
+      El padre de u es nulo
+  El tiempo t empieza en 0
+  Después del setup inicial, para cada vértice u…
+Si el color de u es blanco, llamar a la función recursiva a partir de ese vértice
+  Función recursiva de visita (recibe al grafo y a un vértice u)
+  El tiempo crece en 1
+  Se asigna el tiempo como tiempo de descubrimiento de u
+  Se asigna gris como el color de u (¡acaba de ser descubierto!)
+  Por cada vértice v en la lista de adyacencia de u…
+      Si v es blanco…
+          Asignar u como el padre de v
+          Visitar recursivamente a v
+          Se asigna negro como el color de u
+          El tiempo crece en 1
+          Se asigna el tiempo como tiempo de terminación de u
+*/
 
 void dijkstra(Graph g, Type start) {
     typedef struct strvertex * vertex;
