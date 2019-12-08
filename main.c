@@ -28,10 +28,9 @@ int main() {
     graph_addEdge(g, s6, s5, 4.8);
     graph_addEdge(g, s1, s3, 9.9);
     graph_addEdge(g, s1, s4, 6.7);
-    //Print
-    graph_mode(g, 0);
     graph_addEdge(g, s3, s6, 2.9);
 
+    DFS(g);
     return 0;
 }
 
