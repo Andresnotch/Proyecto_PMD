@@ -11,13 +11,26 @@ int main() {
     //graph_mode(g, 0);
     char *s1 = "Ganso";
     char *s2 = "Pato";
+    char *s3 = "Conejo";
+    char *s4 = "Kanguro";
+    char *s5 = "Koala";
+    char *s6 = "Panda";
     graph_addVertex(g, s1);
     graph_addVertex(g, s2);
+    graph_addVertex(g, s3);
+    graph_addVertex(g, s4);
+    graph_addVertex(g, s5);
+    graph_addVertex(g, s6);
 
     graph_addEdge(g, s1, s2, 2.9);
-
-    graph_deleteVertex(g,s2);
-
+    graph_addEdge(g, s2, s6, 2.1);
+    graph_addEdge(g, s5, s4, 6.3);
+    graph_addEdge(g, s6, s5, 4.8);
+    graph_addEdge(g, s1, s3, 9.9);
+    graph_addEdge(g, s1, s4, 6.7);
+    //Print
+    graph_mode(g, 0);
+    graph_addEdge(g, s3, s6, 2.9);
 
     return 0;
 }

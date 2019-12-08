@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "Graph.h"
-#include "Map.h"
 #include "List.h"
 #include "Queue.h"
 
@@ -17,6 +16,16 @@ struct strGraph {
     PrintFunc pF;
     int debug;
 };
+
+struct strVertex {
+    Type n;
+    char color;
+    double dist;
+    int Tdiscover;
+    int Ttermination;
+    struct strVertex *parent;
+};
+typedef struct strVertex Vertex;
 
 struct strPair {
     Type v;
@@ -52,7 +61,9 @@ void graph_addVertex(Graph g, Type u) {
         g->adjacencyList = list_create(g->dF);
     }
     List tL = list_create(g->dF);
-    list_add(tL, u);
+    Vertex* uV = calloc(1, sizeof(struct strVertex));
+    uV->n = u;
+    list_add(tL, uV);
     list_add(g->adjacencyList, tL);
     if (g->debug == 0) graph_print(g);
 }
@@ -72,7 +83,8 @@ void graph_deleteVertex(Graph g, Type v) {
         it = (Iterator) list_next(it);
         ++idx_v;
         // Compara el elemento 0 de la lista en el iterador con v
-        f_v = g->cF(list_get(list_data(it), 0), v);
+        Vertex * tV = list_get(list_data(it), 0);
+        f_v = g->cF(tV->n, v);
         if (f_v == 0) {
             list_destroy(list_data(it));
             list_remove(g->adjacencyList,idx_v);
@@ -94,11 +106,12 @@ void graph_addEdge(Graph g, Type u, Type v, double weight) {
         it = (Iterator) list_next(it);
         // Si no ha encontrado a v, compara el elemento 0
         // de la lista en el iterador con v
-        if (f_v != 0) f_v = g->cF(list_get((List) list_data(it), 0), v);
+        Vertex *tV = list_get(list_data(it), 0);
+        if (f_v != 0) f_v = g->cF(tV->n, v);
         // Compara el elemento 0 de la lista en el iterador con u
         if (f_u != 0) {
             idx_u++;
-            f_u = g->cF(list_get((List) list_data(it), 0), u);
+            f_u = g->cF(tV->n, u);
         }
         if (f_u == 0 && f_v == 0)  break;
     }
@@ -148,7 +161,7 @@ void graph_deleteEdge(Graph g, Type u, Type v) {
         f_v = g->cF(tP->v, v);
         if (f_v == 0) {
             list_remove(tL, p);
-            printf("Si se elimino edge\n");
+            if (g->debug == 0) printf("Si se elimino edge\n");
             if (g->debug == 0) graph_print(g);
             break;
         }
@@ -166,15 +179,19 @@ void graph_print(Graph g) {
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
         List nl = list_data(it);
-        g->pF(list_get(nl, 0));
+        Vertex *V0 = list_get(nl, 0);
+        g->pF(V0->n); printf("\n");
+        printf("-Color: %c\n-Distancia: %f\n-Ti: %d\n-Tf: %d\n-Padre: ",V0->color,V0->dist,V0->Tdiscover,V0->Tdiscover);
+        if(V0->parent) g->pF(V0->parent->n);
+        else printf("NULO");
+        printf("\n");
         if (list_size(nl) == 1) {
-            printf("\n");
             continue;
         }
         Iterator itn = list_begin(nl);
+        itn = (Iterator) list_next(itn);
         while (list_hasNext(itn)) {
-            for (int i = 0; i < 2; ++i)
-                itn = (Iterator) list_next(itn);
+            itn = (Iterator) list_next(itn);
             printf(" -> {");
             Pair *datos = list_data(itn);
             g->pF(datos->v);
@@ -186,7 +203,7 @@ void graph_print(Graph g) {
 
 
 
-void BFS(Graph g, Type start) {
+void BFS(Graph g, Type start) {/*
 
     //Queues de valores encontrados y procesados si aún tiene A por descubrir no se ha procesado
     Queue encontrados = queue_create(NULL);
@@ -218,7 +235,7 @@ void BFS(Graph g, Type start) {
     Vnext->dist = 888;
     Vnext->parent = NULL;
     Vnext->node = list_get(list_data(dE), 0);*/
-
+/*
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
         if (g->cF(list_get(list_data(dE), 0), start) = 0) {
@@ -248,16 +265,9 @@ void BFS(Graph g, Type start) {
             //Marcar a u como negro (ya procesado)
             Vnext->color=negro;
         }
-    }
+    }*/
     /*Recorrido
       Mientras la cola no esté vacía…
-
-
-
-
-
-
-
 */
 
    /* //vertice inicial
@@ -320,68 +330,24 @@ void BFS(Graph g, Type start) {
   Se asigna el tiempo como tiempo de descubrimiento de u
   Se asigna gris como el color de u (¡acaba de ser descubierto!)
   Por cada vértice v en la lista de adyacencia de u…*/
-/*
-void DFS(Graph g,Type start) {
-    typedef struct strvertex * vertex;
-    typedef struct{
-        Node n;
-        char color;
-        int Tdiscover;
-        int Ttermination;
-        vertex parent;
-    }strvertex;
-
-    Queue descubierto = queue_create(NULL);
-    Queue  procesado = queue_create(NULL);
-    Queue  blanca = queue_create(NULL);*/
-
-    //resto de vertices
-    /*
-    vertex u = calloc(1, sizeof(strvertex));
-    u->color = "blanco";
-    Node = NULL;
-    int Tdiscover = 0;
-    int Ttermination;
 
 
+void DFS_recursive(Graph g, Type u) {
 
-    Iterator dE = list_begin(g->adjacencyList);
-    while (list_hasNext(dE)) {
-        dE = (Iterator) list_next(dE);
-        if(g->cF(list_get(list_data(dE),0),start) != 0) {
-            queue_offer(blanca, list_get(list_data(dE), 0));
+}
 
-
-        }
+void DFS(Graph g) {
+    // Setup
+    Iterator it = list_begin(g->adjacencyList);
+    while (list_hasNext(it)) {
+        it = (Iterator) list_next(it);
     }
-*/
+}
 
 
-/*Procedimiento inicial
-  Para cada vértice u
-      El color de u es blanco
-      El padre de u es nulo
-  El tiempo t empieza en 0
-  Después del setup inicial, para cada vértice u…
-Si el color de u es blanco, llamar a la función recursiva a partir de ese vértice
-*/
-    /*
-     Si v es blanco…
-          Asignar u como el padre de v
-          Visitar recursivamente a v
-          Se asigna negro como el color de u
-          El tiempo crece en 1
-          Se asigna el tiempo como tiempo de terminación de u
-          */
 
 void dijkstra(Graph g, Type start) {
-    typedef struct strvertex * vertex;
-    typedef struct{
-        Node n;
-        char color;
-        double dist;
-        vertex parent;
-    }strvertex;
+
     //Crear un set que guarde todos los vertices calculados
     Queue gris = queue_create(NULL);
     Queue  negro = queue_create(NULL);

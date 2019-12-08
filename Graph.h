@@ -31,7 +31,7 @@ void graph_mode(Graph g, int m);
 
 void BFS(Graph g, Type start);
 
-void DFS(Graph g, Type start);
+void DFS(Graph g);
 
 void dijkstra(Graph g, Type start);
 
