@@ -373,8 +373,12 @@ void dijkstra(Graph g, Type start) {
             Vertex *sV = list_get(list_data(adj), 0);
             //Si la distancia de v es mayor que la suma de la distancia de u y el peso de la arista:
             //(encontrar arista)
-            int *edge = graph_findEdge(g, u, sV);
-            if (sV->dist > u->dist + (Vertex*)list_get(list_get(g->adjacencyList, edge[0]), edge[1]));
+            int *edge = graph_findEdge(g, u->n, sV->n);
+            Pair * tempPair = (Pair*)list_get(list_get(g->adjacencyList, edge[0]), edge[1]+1);
+            if (sV->dist > (u->dist + tempPair->weight)) {
+                sV->dist = u->dist + tempPair->weight;
+                sV->parent = u;
+            }
         }
     }
 }
@@ -402,7 +406,7 @@ int* graph_findEdge(Graph g, Type u, Type v) {
         ind1++;
     }
     res[0] = ind1;
-    if (f_u != 0) return res;
+    if (res[0] == -1) return res;
     it = list_begin(tL);
     it = (Iterator) list_next(it);
     // f_u es badera para found el nodo v

@@ -33,7 +33,8 @@ int main() {
 
 
     //BFS(g,s5);
-    DFS(g);
+    //DFS(g);
+    dijkstra(g,s5);
 
     graph_destroy(g);
     return 0;
