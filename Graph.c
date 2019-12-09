@@ -374,19 +374,41 @@ void dijkstra(Graph g, Type start) {
     }*/
 
     while (!queue_isEmpty(q)){
-        Iterator du = list_begin(g->adjacencyList);
-        Iterator dv = list_begin(g->adjacencyList);
-        du = (Iterator) list_next(du);
-        while (list_hasNext(du)) {
-            dv = (Iterator) list_next(dv);
-            du = (Iterator) list_next(du);
-            Vertex *sU = list_get(list_data(du), 0);
-            if (g->cF(sU->n,dv ) > 0) {
+        //hacerlo minimo
+        Vertex *uV = queue_poll(q);
 
+        queue_offer(S,uV);
+        // Encontrar Lista de adyacencia de uV
+        Iterator Ait = list_begin(g->adjacencyList);
+        while (list_hasNext(Ait)) {
+            Ait = (Iterator) list_next(Ait);
+            Vertex *sV = list_get(list_data(Ait), 0);
+            if (g->cF(sV->n, uV->n) == 0) {
+
+                // Ya que lo encontró iterar por los hijos
+                Iterator it = list_begin(list_data(Ait));
+                it = (Iterator) list_next(it);
+                Pair *tP = NULL;
+                while (list_hasNext(it)) {
+                    it = (Iterator) list_next(it);
+                    tP = (Pair *) list_data(it);
+                    Type son = tP->v;
+                    Iterator sit = list_begin(g->adjacencyList);
+                    while (list_hasNext(sit)) {
+                        sit = (Iterator) list_next(sit);
+                        Vertex *tV = list_get(list_data(sit), 0);
+                        /*Si la distancia de v es mayor que la suma de {la distancia de u} y {el peso del arista (u, v)}
+                        Asignar tal suma como la distancia de v*/
+                        if(tV->dist > sV->dist /*+peso dela arista*/){
+                            tV->dist == sV->dist/*+peso dela arista*/;
+                            /*Asignar a u como el padre de v (pues a través de u se puede llegar a v por una ruta más barata)*/
+                            tV->parent = sV->n;
+                        }
+                        }
+                    }
+                }
             }
         }
-
-
     }
     /*
         Inicialización (setup)
@@ -406,7 +428,3 @@ void dijkstra(Graph g, Type start) {
     Asignar a u como el padre de v (pues a través de u se puede llegar a v por una ruta más barata)
 
 */
-
-
-
-}
