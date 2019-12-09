@@ -22,15 +22,17 @@ int main() {
     graph_addVertex(g, s5);
     graph_addVertex(g, s6);
 
+    graph_addEdge(g, s5, s1, 7.9);
     graph_addEdge(g, s1, s2, 2.9);
     graph_addEdge(g, s2, s6, 2.1);
     graph_addEdge(g, s5, s4, 6.3);
     graph_addEdge(g, s6, s5, 4.8);
-    graph_addEdge(g, s1, s3, 9.9);
-    graph_addEdge(g, s1, s4, 6.7);
+    graph_addEdge(g, s4, s3, 9.9);
+    graph_addEdge(g, s5, s4, 6.7);
     graph_addEdge(g, s3, s6, 2.9);
 
-    BFS(g,s1);
+
+    BFS(g,s5);
     // DFS(g);
     return 0;
 }

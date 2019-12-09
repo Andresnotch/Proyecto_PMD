@@ -125,7 +125,15 @@ void graph_addEdge(Graph g, Type u, Type v, double weight) {
     Pair *data = calloc(1, sizeof(struct strPair));
     data->v = v;
     data->weight = weight;
-    list_add(list_get(g->adjacencyList,idx_u), data);
+    Iterator Addit = list_begin(g->adjacencyList);
+    while(list_hasNext(Addit)) {
+        Addit = list_next(Addit);
+        Vertex *tV = list_get(list_data(Addit), 0);
+        if (g->cF(tV->n, u) == 0) {
+            list_add(list_data(Addit),data);
+            break;
+        }
+    }
     if (g->debug == 0) printf("SI se agrego edge\n");
     if (g->debug == 0) graph_print(g);
 }
@@ -260,7 +268,7 @@ void BFS(Graph g, Type start) {
                         if (g->cF(tV->n, son) == 0 && tV->color == 'B') {
                             tV->color = 'G';
                             tV->dist = 1 + uV->dist ;
-                            tV->parent = uV->n;
+                            tV->parent = uV;
                             queue_offer(q, tV);
                         }
                     }
