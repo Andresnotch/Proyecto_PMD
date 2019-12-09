@@ -346,7 +346,7 @@ void dijkstra(Graph g, Type start) {
         dE = (Iterator) list_next(dE);
         Vertex *sV = list_get(list_data(dE), 0);
         //La distancia es infinita
-        sV->dist = 42069;
+        sV->dist = -42069;
         //El padre es nulo
         sV->parent = NULL;
         //Si es el vertice de inicio la distancia es 0
@@ -373,10 +373,28 @@ void dijkstra(Graph g, Type start) {
             Vertex *sV = list_get(list_data(adj), 0);
             //Si la distancia de v es mayor que la suma de la distancia de u y el peso de la arista:
             //(encontrar arista)
-            int *edge = graph_findEdge(g, u->n, sV->n);
-            Pair * tempPair = (Pair*)list_get(list_get(g->adjacencyList, edge[0]), edge[1]+1);
-            if (sV->dist > (u->dist + tempPair->weight)) {
-                sV->dist = u->dist + tempPair->weight;
+            //int *edge = graph_findEdge(g, u->n, sV->n);
+            //Pair * tempPair = (Pair*)list_get(list_get(g->adjacencyList, edge[0]), edge[1]+1);
+
+            Iterator findit = list_begin(g->adjacencyList);
+            Iterator findv = NULL;
+            while (list_hasNext(findit)) {
+                findit = (Iterator) list_next(findit);
+                Vertex *tV = list_get(list_data(findit), 0);
+                if (g->cF(u->n, tV->n) == 0 ) {
+                    findv = (Iterator)list_begin(list_data(findit));
+                    break;
+                }
+            }
+            Pair * tPair = NULL;
+            while (list_hasNext(findv)) {
+                findv = (Iterator) list_next(findv);
+                tPair = list_data(findv);
+                if (g->cF(sV->n, tPair->v) == 0 ) break;
+            }
+
+            if (sV->dist > (u->dist + tPair->weight)) {
+                sV->dist = u->dist + tPair->weight;
                 sV->parent = u;
             }
         }
