@@ -374,7 +374,7 @@ void dijkstra(Graph g, Type start) {
     }*/
 
     while (!queue_isEmpty(q)){
-        //hacerlo minimo
+        //hacerlo minimo.
         Vertex *uV = queue_poll(q);
 
         queue_offer(S,uV);
