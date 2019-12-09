@@ -31,10 +31,11 @@ int main() {
     graph_addEdge(g, s5, s4, 6.7);
     graph_addEdge(g, s3, s6, 2.9);
 
-
-    //BFS(g,s5);
-    //DFS(g);
-    dijkstra(g,s5);
+    printf("\n ------------------------ BFS ------------------------\n");
+    BFS(g,s5);
+    printf("\n ------------------------ DFS ------------------------\n");
+    DFS(g);
+    //dijkstra(g,s5);
 
     graph_destroy(g);
     return 0;
