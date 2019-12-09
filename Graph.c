@@ -346,7 +346,7 @@ void dijkstra(Graph g, Type start) {
         dE = (Iterator) list_next(dE);
         Vertex *sV = list_get(list_data(dE), 0);
         //La distancia es infinita
-        sV->dist = -42069;
+        sV->dist = 42069;
         //El padre es nulo
         sV->parent = NULL;
         //Si es el vertice de inicio la distancia es 0
@@ -363,7 +363,7 @@ void dijkstra(Graph g, Type start) {
     //Mientras Q no este vacio
     while (priorityqueue_size(Q) > 0){
         //Tomar el nodo minimo de Q: u
-        Vertex * u = priorityqueue_peek(Q);
+        Vertex * u = priorityqueue_poll(Q);
         //Agregar u al conjunto S
         set_add(S, u);
         //Por cada vertice v en la lista de adyacencia de u y no contenido en S
@@ -371,11 +371,8 @@ void dijkstra(Graph g, Type start) {
         while (list_hasNext(adj) && !set_contains(S, list_get(list_data(list_next(adj)), 0))) {
             adj = (Iterator) list_next(adj);
             Vertex *sV = list_get(list_data(adj), 0);
-            //Si la distancia de v es mayor que la suma de la distancia de u y el peso de la arista:
-            //(encontrar arista)
-            //int *edge = graph_findEdge(g, u->n, sV->n);
-            //Pair * tempPair = (Pair*)list_get(list_get(g->adjacencyList, edge[0]), edge[1]+1);
 
+            //Si la distancia de v es mayor que la suma de la distancia de u y el peso de la arista:
             Iterator findit = list_begin(g->adjacencyList);
             Iterator findv = NULL;
             while (list_hasNext(findit)) {
@@ -396,7 +393,10 @@ void dijkstra(Graph g, Type start) {
             if (sV->dist > (u->dist + tPair->weight)) {
                 sV->dist = u->dist + tPair->weight;
                 sV->parent = u;
+                set_add(S, sV);
+                priorityqueue_offer(Q, sV);
             }
+            graph_print(g);
         }
     }
 }

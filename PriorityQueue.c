@@ -58,13 +58,6 @@ void priorityqueue_offer(PriorityQueue q, Type t) {
         q->root[parentIndex(t_index)] = temp;
         t_index = parentIndex(t_index);
     }
-
-    //Eliminar esto cuando termine de debuggear
-    printf("[");
-    for (int i = 0; i < q->size; ++i) {
-        printf("%d, ", *(int*)(q->root[i]));
-    }
-    printf("]");
 }
 
 Type priorityqueue_peek(PriorityQueue q) {
@@ -92,13 +85,6 @@ Type priorityqueue_poll(PriorityQueue q) {
         q->root[childindex] = temp;
         t_index = childindex;
     }
-
-    //Eliminar esto cuando termine de debuggear
-    printf("\n[");
-    for (int i = 0; i < q->size; ++i) {
-        printf("%d, ", *(int*)(q->root[i]));
-    }
-    printf("]");
 
     return res;
 }
