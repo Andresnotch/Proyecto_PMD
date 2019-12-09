@@ -211,13 +211,11 @@ void BFS(Graph g, Type start) {
     Queue q = queue_create(NULL);
     Iterator setit = list_begin(g->adjacencyList);
     while (list_hasNext(setit)) {
-        while (list_hasNext(setit)) {
-            setit = (Iterator) list_next(setit);
-            Vertex *tV = list_get(list_data(setit), 0);
-            tV->color = 'B';
-            tV->dist = -42069;
-            tV->parent = NULL;
-        }
+        setit = (Iterator) list_next(setit);
+        Vertex *tV = list_get(list_data(setit), 0);
+        tV->color = 'B';
+        tV->dist = -42069;
+        tV->parent = NULL;
     }
 
     // Setup start
@@ -225,7 +223,7 @@ void BFS(Graph g, Type start) {
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
         Vertex *sV = list_get(list_data(dE), 0);
-        if (g->cF(sV->n, start)) {
+        if (g->cF(sV->n, start) == 0) {
             sV->color = 'G';
             sV->dist = 0;
             sV->parent = NULL;
@@ -243,7 +241,7 @@ void BFS(Graph g, Type start) {
         while (list_hasNext(Ait)) {
             Ait = (Iterator) list_next(Ait);
             Vertex *sV = list_get(list_data(Ait), 0);
-            if (g->cF(sV->n, uV->n)) {
+            if (g->cF(sV->n, uV->n) == 0) {
 
                 // Ya que lo encontró iterar por los hijos
                 Iterator it = list_data(Ait);
@@ -326,20 +324,18 @@ void DFS(Graph g) {
 
 void dijkstra(Graph g, Type start) {
     // Setup
+    Queue q = queue_create(NULL);
+
     Iterator setit = list_begin(g->adjacencyList);
-    Vertex *sV = list_get(list_data(setit), 0);
-    sV->dist = 0;
-    sV->parent = NULL;
-    sV->color = 'G';
     while (list_hasNext(setit)) {
         setit = (Iterator) list_next(setit);
         Vertex *tV = list_get(list_data(setit), 0);
         tV->dist = -42069;
         tV->parent = NULL;
         tV->color = 'B';
+        if (g->cF(tV->n,start) == 0) tV->dist = 0;
     }
-    Queue q = queue_create(NULL);
-    queue_offer(q,sV);
+
     while (!queue_isEmpty(q)){
 
     }
