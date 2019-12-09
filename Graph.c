@@ -323,10 +323,35 @@ void DFS(Graph g) {
 
 
 void dijkstra(Graph g, Type start) {
-    // Setup
     Queue q = queue_create(NULL);
-
+    Queue S = queue_create(NULL);
+    //setup start
+    Iterator dE = list_begin(g->adjacencyList);
+    while (list_hasNext(dE)) {
+        dE = (Iterator) list_next(dE);
+        Vertex *sV = list_get(list_data(dE), 0);
+        if (g->cF(sV->n, start) == 0) {
+            sV->color = 'G';
+            sV->dist = 0;
+            sV->parent = NULL;
+            queue_offer(q, sV);
+            break;
+        }
+    }
+    //Setup
     Iterator setit = list_begin(g->adjacencyList);
+    while (list_hasNext(setit)) {
+        setit = (Iterator) list_next(setit);
+        Vertex *tV = list_get(list_data(setit), 0);
+        tV->color = 'B';
+        tV->dist = -42069;
+        tV->parent = NULL;
+    }
+    /*Vertex *s = list_get(list_data(setit), 0);
+    s->dist = 0;
+    s->parent = NULL;
+    s->color = 'B';
+
     while (list_hasNext(setit)) {
         setit = (Iterator) list_next(setit);
         Vertex *tV = list_get(list_data(setit), 0);
@@ -334,8 +359,7 @@ void dijkstra(Graph g, Type start) {
         tV->parent = NULL;
         tV->color = 'B';
         if (g->cF(tV->n,start) == 0) tV->dist = 0;
-    }
-
+    }*/
     while (!queue_isEmpty(q)){
 
     }
