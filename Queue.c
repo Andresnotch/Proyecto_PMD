@@ -55,8 +55,7 @@ void queue_offer(Queue q, Type t)
 {
     if(q == NULL)
         return;
-
-    QNode n = (Node) malloc(sizeof(struct QstrNode));
+     QNode n = (Node) malloc(sizeof(struct QstrNode*));
     n->data = t;
     n->next = NULL;
 

@@ -215,6 +215,7 @@ void graph_print(Graph g) {
 }
 
 
+
 void BFS(Graph g, Type start) {
     // Setup
     Queue q = queue_create(NULL);
@@ -332,8 +333,18 @@ void DFS(Graph g) {
 
 void dijkstra(Graph g, Type start) {
     Queue q = queue_create(NULL);
-    Queue S = queue_create(NULL);
+    //Setup
+    Iterator setit = list_begin(g->adjacencyList);
+    while (list_hasNext(setit)) {
+        setit = (Iterator) list_next(setit);
+        Vertex *tV = list_get(list_data(setit), 0);
+        tV->color = 'B';
+        tV->dist = -42069;
+        tV->parent = NULL;
+    }
+
     //setup start
+
     Iterator dE = list_begin(g->adjacencyList);
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
@@ -346,15 +357,8 @@ void dijkstra(Graph g, Type start) {
             break;
         }
     }
-    //Setup
-    Iterator setit = list_begin(g->adjacencyList);
-    while (list_hasNext(setit)) {
-        setit = (Iterator) list_next(setit);
-        Vertex *tV = list_get(list_data(setit), 0);
-        tV->color = 'B';
-        tV->dist = -42069;
-        tV->parent = NULL;
-    }
+
+    Queue S = queue_create(NULL);
     /*Vertex *s = list_get(list_data(setit), 0);
     s->dist = 0;
     s->parent = NULL;
@@ -368,7 +372,20 @@ void dijkstra(Graph g, Type start) {
         tV->color = 'B';
         if (g->cF(tV->n,start) == 0) tV->dist = 0;
     }*/
-    while (!queue_isEmpty(q)) {
+
+    while (!queue_isEmpty(q)){
+        Iterator du = list_begin(g->adjacencyList);
+        Iterator dv = list_begin(g->adjacencyList);
+        du = (Iterator) list_next(du);
+        while (list_hasNext(du)) {
+            dv = (Iterator) list_next(dv);
+            du = (Iterator) list_next(du);
+            Vertex *sU = list_get(list_data(du), 0);
+            if (g->cF(sU->n,dv ) > 0) {
+
+            }
+        }
+
 
     }
     /*
@@ -378,35 +395,17 @@ void dijkstra(Graph g, Type start) {
             El padre de v es nulo
         La distancia del vértice de inicio s es 0 (y su padre es nulo)
     El conjunto S empieza vacío
-    Insertar s en la cola de prioridad Q
+    Insertar s en la cola de prioridad Q*/
+    /*
     Mientras Q no esté vacía…
     Tomar el nodo mínimo de Q: u
     Agregar u al conjunto S
      Por cada vértice v en la lista de adyacencia de u y no contenido en S…
-                                                i. 	Si la distancia de v es mayor que la suma de {la distancia de u} y {el peso del arista (u, v)}
+    Si la distancia de v es mayor que la suma de {la distancia de u} y {el peso del arista (u, v)}
     Asignar tal suma como la distancia de v
     Asignar a u como el padre de v (pues a través de u se puede llegar a v por una ruta más barata)
 
-
-     Explicación de wiki
-      Inicializar todas las distancias en D con un valor infinito relativo, ya que son desconocidas al principio,
-     exceptuando la de x, que se debe colocar en 0, debido a que la distancia de x a x sería 0.
-
-     Sea a = x (Se toma a como nodo actual.)
-
-     Se recorren todos los nodos adyacentes de a, excepto los nodos marcados. Se les llamará nodos no marcados vi.
-
-     Para el nodo actual, se calcula la distancia tentativa desde dicho nodo hasta sus vecinos con la siguiente
-     fórmula: dt(vi) = Da + d(a,vi). Es decir, la distancia tentativa del nodo ‘vi’ es la distancia que actualmente
-     tiene el nodo en el vector D más la distancia desde dicho nodo ‘a’ (el actual) hasta el nodo vi. Si la distancia
-     tentativa es menor que la distancia almacenada en el vector, entonces se actualiza el vector con esta distancia
-     tentativa. Es decir, si dt(vi) < Dvi → Dvi = dt(vi)
-
-     Se marca como completo el nodo a.
-
-     Se toma como próximo nodo actual el de menor valor en D (puede hacerse almacenando los valores en una cola de
-     prioridad) y se regresa al paso 3, mientras existan nodos no marcados.
-     */
+*/
 
 
 

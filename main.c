@@ -52,8 +52,8 @@ int AlphOrder(Type s1, Type s2) {
         if (cmp != 0) return cmp;
         i++;
     }
-    if ((str1[i] == '\0' && str2[i] != '\0')) return str2[i];
-    if ((str1[i] != '\0' && str2[i] == '\0')) return str1[i];
+    if (str1[i] == '\0' && str2[i] != '\0') return str2[i];
+    if (str1[i] != '\0' && str2[i] == '\0') return str1[i];
     return 0;
 }
 
