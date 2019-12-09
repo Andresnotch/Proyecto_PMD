@@ -196,7 +196,8 @@ void graph_print(Graph g) {
         printf("\nNodo: ");
         g->pF(V0->n);
         printf("\n");
-        printf("-Color: %c\n-Distancia: %f\n-Ti: %d\n-Tf: %d\n-Padre: ", V0->color, V0->dist, V0->Tdiscover,
+        // -Color: %c
+        printf("-Distancia: %f\n-Ti: %d\n-Tf: %d\n-Padre: ", /*V0->color,*/ V0->dist, V0->Tdiscover,
                V0->Tdiscover);
         if (V0->parent) g->pF(V0->parent->n);
         else printf("NULO");
