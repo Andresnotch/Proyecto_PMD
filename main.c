@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "Graph.h"
 #include "bool.h"
+#include <stdlib.h>
 
 void printStr(Type val);
 
@@ -38,6 +39,7 @@ int main() {
     //dijkstra(g,s5);
 
     graph_destroy(g);
+    system("PAUSE");
     return 0;
 }
 
