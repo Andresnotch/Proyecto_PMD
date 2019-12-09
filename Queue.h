@@ -8,8 +8,9 @@
 #include "bool.h"
 
 typedef struct strQueue * Queue;
+typedef void (*destructor)(Type);
 
-Queue queue_create(void (*destructor)(void *));
+Queue queue_create(destructor d);
 int queue_size(Queue q);
 bool queue_isEmpty(Queue q);
 void queue_offer(Queue q, Type t);

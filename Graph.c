@@ -62,7 +62,7 @@ void graph_addVertex(Graph g, Type u) {
         g->adjacencyList = list_create(g->dF);
     }
     List tL = list_create(g->dF);
-    Vertex* uV = calloc(1, sizeof(struct strVertex));
+    Vertex *uV = calloc(1, sizeof(struct strVertex));
     uV->n = u;
     list_add(tL, uV);
     list_add(g->adjacencyList, tL);
@@ -76,7 +76,7 @@ void graph_deleteVertex(Graph g, Type v) {
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
         Vertex *tV = list_get(list_data(dE), 0);
-        graph_deleteEdge(g,tV->n,v);
+        graph_deleteEdge(g, tV->n, v);
     }
     // Borrar el Vertex
     int f_v = 1, idx_v = -1;
@@ -85,11 +85,11 @@ void graph_deleteVertex(Graph g, Type v) {
         it = (Iterator) list_next(it);
         ++idx_v;
         // Compara el elemento 0 de la lista en el iterador con v
-        Vertex * tV = list_get(list_data(it), 0);
+        Vertex *tV = list_get(list_data(it), 0);
         f_v = g->cF(tV->n, v);
         if (f_v == 0) {
             list_destroy(list_data(it));
-            list_remove(g->adjacencyList,idx_v);
+            list_remove(g->adjacencyList, idx_v);
             if (g->debug == 0) printf("SI se borro vertex\n");
             if (g->debug == 0) graph_print(g);
             return;
@@ -102,7 +102,7 @@ void graph_deleteVertex(Graph g, Type v) {
 void graph_addEdge(Graph g, Type u, Type v, double weight) {
     if (!g) return;
     // f_x son banderas found para los nodos u y v
-    int f_u = 1, f_v = 1, idx_u = -1 ;
+    int f_u = 1, f_v = 1, idx_u = -1;
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
@@ -115,7 +115,7 @@ void graph_addEdge(Graph g, Type u, Type v, double weight) {
             idx_u++;
             f_u = g->cF(tV->n, u);
         }
-        if (f_u == 0 && f_v == 0)  break;
+        if (f_u == 0 && f_v == 0) break;
     }
     if (f_u != 0 || f_v != 0) {
         if (g->debug == 0) printf("NO se agrego edge\n");
@@ -125,7 +125,7 @@ void graph_addEdge(Graph g, Type u, Type v, double weight) {
     Pair *data = calloc(1, sizeof(struct strPair));
     data->v = v;
     data->weight = weight;
-    list_add(list_get(g->adjacencyList,idx_u), data);
+    list_add(list_get(g->adjacencyList, idx_u), data);
     if (g->debug == 0) printf("SI se agrego edge\n");
     if (g->debug == 0) graph_print(g);
 }
@@ -155,12 +155,12 @@ void graph_deleteEdge(Graph g, Type u, Type v) {
     it = (Iterator) list_next(it);
     // f_u es badera para found el nodo v
     int f_v = 1, p = 0;
-    Pair * tP = NULL;
+    Pair *tP = NULL;
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
         p++;
         // Compara el elemento en el iterador con v
-        tP = (Pair*)list_data(it);
+        tP = (Pair *) list_data(it);
         f_v = g->cF(tP->v, v);
         if (f_v == 0) {
             list_remove(tL, p);
@@ -183,9 +183,12 @@ void graph_print(Graph g) {
         it = (Iterator) list_next(it);
         List nl = list_data(it);
         Vertex *V0 = list_get(nl, 0);
-        printf("\nNodo: "); g->pF(V0->n); printf("\n");
-        printf("-Color: %c\n-Distancia: %f\n-Ti: %d\n-Tf: %d\n-Padre: ",V0->color,V0->dist,V0->Tdiscover,V0->Tdiscover);
-        if(V0->parent) g->pF(V0->parent->n);
+        printf("\nNodo: ");
+        g->pF(V0->n);
+        printf("\n");
+        printf("-Color: %c\n-Distancia: %f\n-Ti: %d\n-Tf: %d\n-Padre: ", V0->color, V0->dist, V0->Tdiscover,
+               V0->Tdiscover);
+        if (V0->parent) g->pF(V0->parent->n);
         else printf("NULO");
         printf("\n");
         if (list_size(nl) == 1) {
@@ -205,37 +208,96 @@ void graph_print(Graph g) {
 }
 
 
-
 void BFS(Graph g, Type start) {
+
+
     // Setup
+    Queue q = queue_create(NULL);
     Iterator setit = list_begin(g->adjacencyList);
     while (list_hasNext(setit)) {
         setit = (Iterator) list_next(setit);
         Vertex *tV = list_get(list_data(setit), 0);
         tV->color = 'B';
+        tV->dist = -42069;
         tV->parent = NULL;
     }
+
+    // Setup start
+    Iterator dE = list_begin(g->adjacencyList);
+    while (list_hasNext(dE)) {
+        dE = (Iterator) list_next(dE);
+        Vertex *sV = list_get(list_data(dE), 0);
+        if (g->cF(sV->n, start)) {
+            sV->color = 'G';
+            sV->dist = 0;
+            sV->parent = NULL;
+            queue_offer(q, sV);
+            break;
+        }
+    }
+
+
+
+
+    // Recorrido
+    while (!queue_isEmpty(q)) {
+        Vertex *uV = queue_poll(q);
+
+        // Encontrar Lista de adyacencia de uV
+        Iterator Ait = list_begin(g->adjacencyList);
+        while (list_hasNext(Ait)) {
+            Ait = (Iterator) list_next(Ait);
+            Vertex *sV = list_get(list_data(Ait), 0);
+            if (g->cF(sV->n, uV->n)) {
+
+                // Ya que lo encontró iterar por los hijos
+                Iterator it = list_data(Ait);
+                it = (Iterator) list_next(it);
+                Pair *tP = NULL;
+                while (list_hasNext(it)) {
+                    it = (Iterator) list_next(it);
+                    tP = (Pair *) list_data(it);
+                    Type son = tP->v;
+                    Iterator sit = list_begin(g->adjacencyList);
+                    while (list_hasNext(sit)) {
+                        sit = (Iterator) list_next(sit);
+                        Vertex *tV = list_get(list_data(sit), 0);
+
+                        // Se procesan los hijos
+                        if (g->cF(tV->n, son) == 0 && tV->color == 'B') {
+                            tV->color = 'G';
+                            tV->dist = 1 + uV->dist ;
+                            tV->parent = uV->n;
+                            queue_offer(q, tV);
+                        }
+                    }
+                }
+            }
+        }
+        uV->color = 'N';
+    }
+    graph_print(g);
 }
 
 
 void DFS_recursive(Graph g, List u) {
-    Vertex * uVtx = list_get(u,0);
+    Vertex *uVtx = list_get(u, 0);
     uVtx->Tdiscover = ++g->DFS_time;
     uVtx->color = 'G';
-    if(list_size(u) > 1) {
+    if (list_size(u) > 1) {
         Iterator it = list_begin(u);
         it = (Iterator) list_next(it);
-        Pair * tP = NULL;
+        Pair *tP = NULL;
         while (list_hasNext(it)) {
             it = (Iterator) list_next(it);
-            tP = (Pair*)list_data(it);
+            tP = (Pair *) list_data(it);
             Type son = tP->v;
 
             Iterator dE = list_begin(g->adjacencyList);
             while (list_hasNext(dE)) {
                 dE = (Iterator) list_next(dE);
-                Vertex * tV = list_get(list_data(dE),0);
-                if(g->cF(tV->n,son) == 0 && tV->color == 'B') {
+                Vertex *tV = list_get(list_data(dE), 0);
+                if (g->cF(tV->n, son) == 0 && tV->color == 'B') {
                     tV->parent = uVtx;
                     DFS_recursive(g, list_data(dE));
                 }
@@ -261,26 +323,25 @@ void DFS(Graph g) {
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
-        List  Node = list_data(it);
+        List Node = list_data(it);
         Vertex *u = list_get(list_data(it), 0);
-        if(u->color == 'B') DFS_recursive(g, Node);
+        if (u->color == 'B') DFS_recursive(g, Node);
     }
     graph_print(g);
 }
-
 
 
 void dijkstra(Graph g, Type start) {
 
     //Crear un set que guarde todos los vertices calculados
     Queue gris = queue_create(NULL);
-    Queue  negro = queue_create(NULL);
-    Queue  blanca = queue_create(NULL);
+    Queue negro = queue_create(NULL);
+    Queue blanca = queue_create(NULL);
 
     Iterator dE = list_begin(g->adjacencyList);
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
-        if(g->cF(list_get(list_data(dE),0),start) != 0) {
+        if (g->cF(list_get(list_data(dE), 0), start) != 0) {
             queue_offer(blanca, list_get(list_data(dE), 0));
             //falta agregar el la distancia infinita mediante las tablas hash y crear 3 mapas
 

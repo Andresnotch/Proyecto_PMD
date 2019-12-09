@@ -30,7 +30,8 @@ int main() {
     graph_addEdge(g, s1, s4, 6.7);
     graph_addEdge(g, s3, s6, 2.9);
 
-    DFS(g);
+    BFS(g,s1);
+    // DFS(g);
     return 0;
 }
 
