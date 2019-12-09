@@ -34,6 +34,8 @@ int main() {
 
     BFS(g,s5);
     // DFS(g);
+
+    graph_destroy(g);
     return 0;
 }
 

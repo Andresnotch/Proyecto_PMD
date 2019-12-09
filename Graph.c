@@ -4,7 +4,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include "Graph.h"
 #include "List.h"
 #include "Queue.h"
@@ -85,11 +84,11 @@ void graph_deleteVertex(Graph g, Type v) {
         it = (Iterator) list_next(it);
         ++idx_v;
         // Compara el elemento 0 de la lista en el iterador con v
-        Vertex * tV = list_get(list_data(it), 0);
+        Vertex *tV = list_get(list_data(it), 0);
         f_v = g->cF(tV->n, v);
         if (f_v == 0) {
             list_destroy(list_data(it));
-            list_remove(g->adjacencyList,idx_v);
+            list_remove(g->adjacencyList, idx_v);
             if (g->debug == 0) printf("SI se borro vertex\n");
             if (g->debug == 0) graph_print(g);
             return;
@@ -102,7 +101,7 @@ void graph_deleteVertex(Graph g, Type v) {
 void graph_addEdge(Graph g, Type u, Type v, double weight) {
     if (!g) return;
     // f_x son banderas found para los nodos u y v
-    int f_u = 1, f_v = 1, idx_u = -1 ;
+    int f_u = 1, f_v = 1, idx_u = -1;
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
@@ -115,7 +114,7 @@ void graph_addEdge(Graph g, Type u, Type v, double weight) {
             idx_u++;
             f_u = g->cF(tV->n, u);
         }
-        if (f_u == 0 && f_v == 0)  break;
+        if (f_u == 0 && f_v == 0) break;
     }
     if (f_u != 0 || f_v != 0) {
         if (g->debug == 0) printf("NO se agrego edge\n");
@@ -126,11 +125,11 @@ void graph_addEdge(Graph g, Type u, Type v, double weight) {
     data->v = v;
     data->weight = weight;
     Iterator Addit = list_begin(g->adjacencyList);
-    while(list_hasNext(Addit)) {
+    while (list_hasNext(Addit)) {
         Addit = list_next(Addit);
         Vertex *tV = list_get(list_data(Addit), 0);
         if (g->cF(tV->n, u) == 0) {
-            list_add(list_data(Addit),data);
+            list_add(list_data(Addit), data);
             break;
         }
     }
@@ -149,7 +148,7 @@ void graph_deleteEdge(Graph g, Type u, Type v) {
         // Si no ha encontrado a u, compara el elemento 0
         // de la lista en el iterador con u
         Vertex *tV = list_get(list_data(it), 0);
-        if (f_u != 0) f_u = g->cF(tV->n, u);
+        f_u = g->cF(tV->n, u);
         if (f_u == 0) {
             tL = list_data(it);
             break;
@@ -163,12 +162,12 @@ void graph_deleteEdge(Graph g, Type u, Type v) {
     it = (Iterator) list_next(it);
     // f_u es badera para found el nodo v
     int f_v = 1, p = 0;
-    Pair * tP = NULL;
+    Pair *tP = NULL;
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
         p++;
         // Compara el elemento en el iterador con v
-        tP = (Pair*)list_data(it);
+        tP = (Pair *) list_data(it);
         f_v = g->cF(tP->v, v);
         if (f_v == 0) {
             list_remove(tL, p);
@@ -191,9 +190,12 @@ void graph_print(Graph g) {
         it = (Iterator) list_next(it);
         List nl = list_data(it);
         Vertex *V0 = list_get(nl, 0);
-        printf("\nNodo: "); g->pF(V0->n); printf("\n");
-        printf("-Color: %c\n-Distancia: %f\n-Ti: %d\n-Tf: %d\n-Padre: ",V0->color,V0->dist,V0->Tdiscover,V0->Tdiscover);
-        if(V0->parent) g->pF(V0->parent->n);
+        printf("\nNodo: ");
+        g->pF(V0->n);
+        printf("\n");
+        printf("-Color: %c\n-Distancia: %f\n-Ti: %d\n-Tf: %d\n-Padre: ", V0->color, V0->dist, V0->Tdiscover,
+               V0->Tdiscover);
+        if (V0->parent) g->pF(V0->parent->n);
         else printf("NULO");
         printf("\n");
         if (list_size(nl) == 1) {
@@ -211,7 +213,6 @@ void graph_print(Graph g) {
         printf("\n");
     }
 }
-
 
 
 void BFS(Graph g, Type start) {
@@ -267,7 +268,7 @@ void BFS(Graph g, Type start) {
                         // Se procesan los hijos
                         if (g->cF(tV->n, son) == 0 && tV->color == 'B') {
                             tV->color = 'G';
-                            tV->dist = 1 + uV->dist ;
+                            tV->dist = 1 + uV->dist;
                             tV->parent = uV;
                             queue_offer(q, tV);
                         }
@@ -281,24 +282,24 @@ void BFS(Graph g, Type start) {
 }
 
 void DFS_recursive(Graph g, List u) {
-    Vertex * uVtx = list_get(u,0);
+    Vertex *uVtx = list_get(u, 0);
     uVtx->Tdiscover = ++g->DFS_time;
     uVtx->color = 'G';
-    if(list_size(u) > 1) {
+    if (list_size(u) > 1) {
         Iterator it = list_begin(u);
         it = (Iterator) list_next(it);
-        Pair * tP = NULL;
+        Pair *tP = NULL;
         while (list_hasNext(it)) {
             it = (Iterator) list_next(it);
-            tP = (Pair*)list_data(it);
+            tP = (Pair *) list_data(it);
             Type son = tP->v;
 
             Iterator dE = list_begin(g->adjacencyList);
             while (list_hasNext(dE)) {
                 dE = (Iterator) list_next(dE);
-                Vertex * tV = list_get(list_data(dE),0);
-                if(g->cF(tV->n,son) == 0 && tV->color == 'B')
-                    DFS_recursive(g,list_data(dE));
+                Vertex *tV = list_get(list_data(dE), 0);
+                if (g->cF(tV->n, son) == 0 && tV->color == 'B')
+                    DFS_recursive(g, list_data(dE));
             }
         }
     }
@@ -321,13 +322,12 @@ void DFS(Graph g) {
     Iterator it = list_begin(g->adjacencyList);
     while (list_hasNext(it)) {
         it = (Iterator) list_next(it);
-        List  Node = list_data(it);
+        List Node = list_data(it);
         Vertex *u = list_get(list_data(it), 0);
-        if(u->color == 'B') DFS_recursive(g, Node);
+        if (u->color == 'B') DFS_recursive(g, Node);
     }
     graph_print(g);
 }
-
 
 
 void dijkstra(Graph g, Type start) {
@@ -368,7 +368,7 @@ void dijkstra(Graph g, Type start) {
         tV->color = 'B';
         if (g->cF(tV->n,start) == 0) tV->dist = 0;
     }*/
-    while (!queue_isEmpty(q)){
+    while (!queue_isEmpty(q)) {
 
     }
     /*
