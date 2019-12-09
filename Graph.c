@@ -7,6 +7,8 @@
 #include "Graph.h"
 #include "List.h"
 #include "Queue.h"
+#include "Set.h"
+#include "PriorityQueue.h"
 
 struct strGraph {
     List adjacencyList;
@@ -34,6 +36,7 @@ struct strPair {
 typedef struct strPair Pair;
 
 void graph_print(Graph g);
+int *graph_findEdge(Graph g, Type u, Type v);
 
 Graph graph_create(PrintFunc printer, DestroyFunc destructor, CompareFunc comp) {
     Graph g = calloc(1, sizeof(struct strGraph));
@@ -332,99 +335,88 @@ void DFS(Graph g) {
 
 
 void dijkstra(Graph g, Type start) {
-    Queue q = queue_create(NULL);
-    //Setup
-    Iterator setit = list_begin(g->adjacencyList);
-    while (list_hasNext(setit)) {
-        setit = (Iterator) list_next(setit);
-        Vertex *tV = list_get(list_data(setit), 0);
-        tV->color = 'B';
-        tV->dist = -42069;
-        tV->parent = NULL;
-    }
-
+    //Cola de prioridad minima
+    PriorityQueue Q = priorityqueue_create(g->dF, g->cF, 30);
+    //Vertice de inicio
+    Vertex *s = NULL;
     //setup start
-
     Iterator dE = list_begin(g->adjacencyList);
+    //Por cada vertice
     while (list_hasNext(dE)) {
         dE = (Iterator) list_next(dE);
         Vertex *sV = list_get(list_data(dE), 0);
+        //La distancia es infinita
+        sV->dist = 42069;
+        //El padre es nulo
+        sV->parent = NULL;
+        //Si es el vertice de inicio la distancia es 0
         if (g->cF(sV->n, start) == 0) {
-            sV->color = 'G';
             sV->dist = 0;
-            sV->parent = NULL;
-            queue_offer(q, sV);
+            s = sV;
+        }
+    }
+    //Conjunto vacio
+    Set S = set_create(g->cF, g->pF, g->dF);
+    //Insertar s en la cola de prioridad Q
+    priorityqueue_offer(Q, s);
+
+    //Mientras Q no este vacio
+    while (priorityqueue_size(Q) > 0){
+        //Tomar el nodo minimo de Q: u
+        Vertex * u = priorityqueue_peek(Q);
+        //Agregar u al conjunto S
+        set_add(S, u);
+        //Por cada vertice v en la lista de adyacencia de u y no contenido en S
+        Iterator adj = list_begin(g->adjacencyList);
+        while (list_hasNext(adj) && !set_contains(S, list_get(list_data(list_next(adj)), 0))) {
+            adj = (Iterator) list_next(adj);
+            Vertex *sV = list_get(list_data(adj), 0);
+            //Si la distancia de v es mayor que la suma de la distancia de u y el peso de la arista:
+            //(encontrar arista)
+            int *edge = graph_findEdge(g, u, sV);
+            if (sV->dist > u->dist + (Vertex*)list_get(list_get(g->adjacencyList, edge[0]), edge[1]));
+        }
+    }
+}
+
+int* graph_findEdge(Graph g, Type u, Type v) {
+    int* res = calloc(2, sizeof(int));
+    res[0] = res[1] = -1;
+    if (!g) return res;
+    // f_u es badera para found el nodo u
+    int f_u = 1;
+    List tL = NULL;
+    //Primer indice
+    int ind1 = -1;
+    Iterator it = list_begin(g->adjacencyList);
+    while (list_hasNext(it)) {
+        it = (Iterator) list_next(it);
+        // Si no ha encontrado a u, compara el elemento 0
+        // de la lista en el iterador con u
+        Vertex *tV = list_get(list_data(it), 0);
+        f_u = g->cF(tV->n, u);
+        if (f_u == 0) {
+            tL = list_data(it);
             break;
         }
+        ind1++;
     }
-
-    Queue S = queue_create(NULL);
-    /*Vertex *s = list_get(list_data(setit), 0);
-    s->dist = 0;
-    s->parent = NULL;
-    s->color = 'B';
-
-    while (list_hasNext(setit)) {
-        setit = (Iterator) list_next(setit);
-        Vertex *tV = list_get(list_data(setit), 0);
-        tV->dist = -42069;
-        tV->parent = NULL;
-        tV->color = 'B';
-        if (g->cF(tV->n,start) == 0) tV->dist = 0;
-    }*/
-
-    while (!queue_isEmpty(q)){
-        //hacerlo minimo.
-        Vertex *uV = queue_poll(q);
-
-        queue_offer(S,uV);
-        // Encontrar Lista de adyacencia de uV
-        Iterator Ait = list_begin(g->adjacencyList);
-        while (list_hasNext(Ait)) {
-            Ait = (Iterator) list_next(Ait);
-            Vertex *sV = list_get(list_data(Ait), 0);
-            if (g->cF(sV->n, uV->n) == 0) {
-
-                // Ya que lo encontró iterar por los hijos
-                Iterator it = list_begin(list_data(Ait));
-                it = (Iterator) list_next(it);
-                Pair *tP = NULL;
-                while (list_hasNext(it)) {
-                    it = (Iterator) list_next(it);
-                    tP = (Pair *) list_data(it);
-                    Type son = tP->v;
-                    Iterator sit = list_begin(g->adjacencyList);
-                    while (list_hasNext(sit)) {
-                        sit = (Iterator) list_next(sit);
-                        Vertex *tV = list_get(list_data(sit), 0);
-                        /*Si la distancia de v es mayor que la suma de {la distancia de u} y {el peso del arista (u, v)}
-                        Asignar tal suma como la distancia de v*/
-                        if(tV->dist > sV->dist /*+peso dela arista*/){
-                            tV->dist == sV->dist/*+peso dela arista*/;
-                            /*Asignar a u como el padre de v (pues a través de u se puede llegar a v por una ruta más barata)*/
-                            tV->parent = sV->n;
-                        }
-                        }
-                    }
-                }
-            }
+    res[0] = ind1;
+    if (f_u != 0) return res;
+    it = list_begin(tL);
+    it = (Iterator) list_next(it);
+    // f_u es badera para found el nodo v
+    int f_v = 1, p = 0;
+    Pair *tP = NULL;
+    while (list_hasNext(it)) {
+        it = (Iterator) list_next(it);
+        p++;
+        // Compara el elemento en el iterador con v
+        tP = (Pair *) list_data(it);
+        f_v = g->cF(tP->v, v);
+        if (f_v == 0) {
+            res[1] = p;
+            return res;
         }
     }
-    /*
-        Inicialización (setup)
-        Para cada vértice v…
-            La distancia de v es “infinita”
-            El padre de v es nulo
-        La distancia del vértice de inicio s es 0 (y su padre es nulo)
-    El conjunto S empieza vacío
-    Insertar s en la cola de prioridad Q*/
-    /*
-    Mientras Q no esté vacía…
-    Tomar el nodo mínimo de Q: u
-    Agregar u al conjunto S
-     Por cada vértice v en la lista de adyacencia de u y no contenido en S…
-    Si la distancia de v es mayor que la suma de {la distancia de u} y {el peso del arista (u, v)}
-    Asignar tal suma como la distancia de v
-    Asignar a u como el padre de v (pues a través de u se puede llegar a v por una ruta más barata)
-
-*/
+}

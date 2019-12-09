@@ -32,8 +32,8 @@ int main() {
     graph_addEdge(g, s3, s6, 2.9);
 
 
-    BFS(g,s5);
-    // DFS(g);
+    //BFS(g,s5);
+    DFS(g);
 
     graph_destroy(g);
     return 0;
