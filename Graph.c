@@ -341,11 +341,15 @@ void dijkstra(Graph g, Type start) {
     while (list_hasNext(setit)) {
         setit = (Iterator) list_next(setit);
         Vertex *tV = list_get(list_data(setit), 0);
-        tV->dist = 888;
+        tV->dist = -42069;
         tV->parent = NULL;
         tV->color = 'B';
     }
+    Queue q = queue_create(NULL);
+    queue_offer(q,sV);
+    while (!queue_isEmpty(q)){
 
+    }
     /*
         Inicialización (setup)
         Para cada vértice v…
