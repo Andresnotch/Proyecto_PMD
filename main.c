@@ -35,7 +35,8 @@ int main() {
     BFS(g,s5);
     printf("\n ------------------------ DFS ------------------------\n");
     DFS(g);
-    //dijkstra(g,s5);
+    printf("\n ------------------------ dijkstra ------------------------\n");
+    dijkstra(g,s5);
 
     graph_destroy(g);
     return 0;
