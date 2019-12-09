@@ -274,13 +274,6 @@ void BFS(Graph g, Type start) {
     graph_print(g);
 }
 
-/* Función recursiva de visita (recibe al grafo y a un vértice u)
-  El tiempo crece en 1
-  Se asigna el tiempo como tiempo de descubrimiento de u
-  Se asigna gris como el color de u (¡acaba de ser descubierto!)
-  Por cada vértice v en la lista de adyacencia de u…*/
-
-
 void DFS_recursive(Graph g, List u) {
     Vertex * uVtx = list_get(u,0);
     uVtx->Tdiscover = ++g->DFS_time;
