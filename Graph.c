@@ -244,7 +244,7 @@ void BFS(Graph g, Type start) {
             if (g->cF(sV->n, uV->n) == 0) {
 
                 // Ya que lo encontró iterar por los hijos
-                Iterator it = list_data(Ait);
+                Iterator it = list_begin(list_data(Ait));
                 it = (Iterator) list_next(it);
                 Pair *tP = NULL;
                 while (list_hasNext(it)) {
